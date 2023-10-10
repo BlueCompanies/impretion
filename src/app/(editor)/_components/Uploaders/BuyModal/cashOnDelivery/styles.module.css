@@ -1,0 +1,49 @@
+.buyBtn{
+    font-size: 15px;
+    display: inline-block;
+    padding: 8px 16px;
+    color: #333;
+    border-radius: 3px;
+    margin: 10px;
+    width: 95%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: arial;
+    border: none;
+    height: 50px;
+    background-color: #1483FF;
+    color: #fff;
+  }
+
+  .switchBtn{
+    border: none;
+    width: 200px;
+    padding: 10px;
+    border-radius: 4px 4px 0px 0px;
+    margin: 5px;
+    cursor: pointer;
+  }
+
+  .bodySection{
+    border: 1px solid #e2e2e2;
+    padding: 10px;
+    border-radius: 4px;
+  }
+
+  .properties{
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+    border: 1px solid #e2e2e2;
+    padding: 1px;
+    border-radius: 3px;
+  }
+
+  .textProperties{
+    background: #e2e2e2;
+    padding: 4px;
+    color: #333;
+    width: 200px;
+  }

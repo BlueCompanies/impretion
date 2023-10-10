@@ -9,10 +9,25 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.427.0",
+    "@aws-sdk/s3-request-presigner": "^3.427.0",
+    "@aws-sdk/signature-v4-crt": "^3.425.0",
+    "@aws-sdk/util-stream-node": "^3.374.0",
+    "bcryptjs": "^2.4.3",
     "eslint": "8.51.0",
     "eslint-config-next": "13.5.4",
+    "html-to-image": "^1.11.11",
+    "md5": "^2.3.0",
+    "mongoose": "^7.6.1",
     "next": "13.5.4",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-moveable": "^0.54.2",
+    "react-selecto": "^1.26.0",
+    "uuid": "^9.0.1",
+    "zustand": "^4.4.3"
+  },
+  "devDependencies": {
+    "react-icons": "^4.11.0"
   }
 }

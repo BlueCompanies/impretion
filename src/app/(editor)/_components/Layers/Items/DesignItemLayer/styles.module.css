@@ -1,0 +1,99 @@
+.imageContainer{
+    display: flex;
+    flex-direction: row;
+    background-color: #fff;  
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ebebeb;
+}
+
+.groupOne{
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+}
+
+.imageName{
+    margin: auto;
+    word-break: break-word;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 180px;
+    max-height: 73px;
+    font-size: 11px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.dragHandler{
+    position: relative;
+    border: 1px solid #ebebeb;
+    background-color: #fff;
+    width: 40px;
+    border-radius: 0px 5px 5px 0px;
+}
+
+.handlerImage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    touch-action: none;
+    background-color: #fff;
+  }
+
+  .imageTools{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+    border: 1px solid #ebebeb;
+}
+
+
+.trashBtn{
+    border: none;
+    outline: none;
+    display: flex;
+    justify-content: flex-end;
+    margin-top:3px;
+    background-color: #fff;
+}
+
+.trashBtn:hover{
+    color: #af3848;
+    cursor: pointer;
+}
+
+.imageBottomConfig{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: auto 0;
+    padding: 0;
+    background-color: #fff;
+    border: 1px solid #ebebeb;
+}
+
+
+.designItem{
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+  border: 1px solid #e2e2e2;
+  border-radius: 4px;
+  margin: 5px;
+  cursor: pointer;
+  overflow: hidden; /* Ensure the image doesn't overflow the container */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.imageItem {
+  width: auto; /* Allow the width to adjust to maintain the aspect ratio */
+  height: auto; /* Allow the height to adjust to maintain the aspect ratio */
+  max-width: 100%;
+  max-height: 100%;
+}

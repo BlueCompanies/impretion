@@ -1,0 +1,202 @@
+
+.productContainer{
+    border-radius: 10px;
+    display: flex;
+    margin: 30px auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+  }
+
+  .productPresentation{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: left;
+    padding: 10px;
+  }
+  
+  .productName{
+    color: #4e4e4e;
+    font-size: 42px;
+    width: 100%;
+    margin: auto;
+  }
+  
+  .productImages{
+    flex-grow: 1;
+  }
+  
+  .productFeatures{
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    list-style-type: none;
+  }
+  
+  .productFeature {
+    display: flex;
+    margin: 3px;
+    font-size: 15px;
+  }
+  
+  .productInfo{
+    width: 100%;
+    padding: 10px;
+    margin-left: 10px;
+  }
+
+  .productAbout{
+    height: fit-content;
+  
+    font-size: 15px;
+  }
+  
+  .productMaterial {
+    display: flex;
+    margin: 3px;
+    font-size: 16px;
+  }
+  
+  .imageContainer{
+    display: flex;
+  }
+  
+  .currentImages{
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
+    margin: 5px;
+    border-radius: 10px;
+  }
+  
+  .imageScroll{
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: 5px;
+    height: fit-content;
+    background-color: #e0e0e0;
+    max-height: 400px;
+    margin: 5px;
+    padding: 5px;
+  }
+  
+  .productDescription{
+    flex-direction: column;
+    background-color: white;
+    justify-content: center;
+    width: 85%;
+  }
+  
+  .editLink {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    padding: 8px;
+    margin: 8px;
+    width: 100%;
+    background-color: rgba(20,131,255,1);
+    color: #fff;
+  }
+  
+  .productImage{
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .measuresBtn{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: none;
+    padding: 10px;
+    border-radius: 3px;
+    background-color: rgba(20,131,255,1);
+    color: #fff;
+  }
+  
+  .measuresBtn:hover{
+    cursor: pointer;
+  }
+  
+  .table{
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .column{
+    border: 1px solid #4e4e4e;
+    padding: 8px;
+  }
+
+  @media screen and (max-width: 1095px) {
+    .productPresentation{
+      flex-direction: column;
+    }
+
+    .currentImages{
+      width:300px;
+      height:300;
+    }
+
+    .productInfo{
+      padding: 0px;
+      width: 100%;
+    }
+
+    .productContainer{
+      width: 100%;
+    }
+
+    .productDescription{
+      margin: auto;
+      width: 100%;
+    }
+
+    .editLink{
+      width: 97%;
+    }
+
+    .productAbout{
+      max-width: 95%;
+    }
+
+    .imageContainer{
+      display: flex;
+      flex-direction: column;
+    }
+
+    .productImage{
+      margin-right: 10px;
+    }
+
+    .imageScroll{
+      overflow-y: hidden;
+      overflow-x: auto;
+    }
+  }
+
+  @media screen and (max-width: 500px){
+    .productDescription{
+      max-width: 80%;
+    }
+  }
+
+  @media screen and (max-width: 350px){
+    .productDescription{
+      max-width: 70%;
+    }
+  }
+
+  @media screen and (max-width: 300px){
+    .productDescription{
+      max-width: 60%;
+    }
+  }

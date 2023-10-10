@@ -1,0 +1,172 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    height: 100px;
+  }
+  
+  .headerView {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    z-index: 9999;
+  }
+  
+  .rightToolSection {
+    padding: 10px;
+    z-index: 99999999;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 20%;
+    height: 100%;
+    background-color: #f1f1f1;
+    overflow: hidden;
+  }
+  
+  .boardContent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1000px;
+    height: 1000px;
+    border: 1px solid #ccc;
+    background-color: blue;
+  }
+  
+  .triangle{
+  position: relative;
+  width: 350px;
+  height: 400px;
+  margin: 50px 20px 70px;
+  }
+  
+  .shape{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(206, 206, 206);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  }
+  
+  .outOfPreviewBtn {
+    position: fixed;
+    top: 0;
+    left: 1;
+    margin: 8px;
+    padding: 8px;
+    cursor: pointer;
+    z-index: 9999;
+    margin: 8px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    color: #000;
+  }
+  
+  
+  /* MODAL PREVIEW PRODUCT WINDOW */
+  
+  .modalPreview{
+    position: absolute;
+    z-index: 9999999999;
+    width: 100vh;
+    height: 100vw;
+    background-color: rgb(116, 116, 116);
+  }
+  
+  .visualItemPreview{
+    position: absolute;
+    z-index: 999;
+  }
+  
+  .productMockup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 900px;
+    height: 900px;
+    transform: translate(-50%, -50%);
+  }
+  
+  
+  
+  
+  /* MODAL PREVIEW PRODUCT WINDOW */
+  .modalContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #b6b6b6; /* Semi-transparent background */
+    z-index: 9999;
+  }
+  
+  .modalContent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 1024px;
+    height: 1024px;
+    background-color: #fff;
+    display: flex;
+  }
+  
+  .closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  /* styles.module.css */
+
+ /* styles.module.css */
+
+/* Container for the images */
+/* Container for the images */
+.imageContainer {
+  position: relative;
+ width: 100%;
+ height: 100%;
+}
+
+/* Style for each image */
+.img {
+  max-width: 100%; /* Ensure it doesn't exceed the width of the container */
+  max-height: 100%; /* Ensure it doesn't exceed the height of the container */
+  background-color: lightyellow;
+  margin: 5px; /* Add some margin between images */
+}
+  
+  .loadingContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 500px; /* Adjust the max width as needed */
+    padding: 20px;
+    text-align: center;
+    font-size: 80px;
+  }
+  
+
+
+  .rect{
+    fill: white;
+    mask: url(#mask);
+  }
+

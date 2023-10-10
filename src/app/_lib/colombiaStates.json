@@ -1,0 +1,242 @@
+{
+	"data": [
+		{
+			"name": "Amazonas",
+			"code_2_digits": "AM",
+			"code_3_digits": "AMA",
+			"code_shopify": "AMA",
+			"country_code": "CO"
+		},
+		{
+			"name": "Antioquia",
+			"code_2_digits": "AN",
+			"code_3_digits": "ANT",
+			"code_shopify": "ANT",
+			"country_code": "CO"
+		},
+		{
+			"name": "Arauca",
+			"code_2_digits": "AR",
+			"code_3_digits": "ARA",
+			"code_shopify": "ARA",
+			"country_code": "CO"
+		},
+		{
+			"name": "Atlantico",
+			"code_2_digits": "AT",
+			"code_3_digits": "ATL",
+			"code_shopify": "ATL",
+			"country_code": "CO"
+		},
+		{
+			"name": "Bogotá",
+			"code_2_digits": "DC",
+			"code_3_digits": "DC",
+			"code_shopify": "DC",
+			"country_code": "CO"
+		},
+		{
+			"name": "Bogotá DC",
+			"code_2_digits": "DC",
+			"code_3_digits": "DC",
+			"code_shopify": "BOG",
+			"country_code": "CO"
+		},
+		{
+			"name": "Bolívar",
+			"code_2_digits": "BL",
+			"code_3_digits": "BOL",
+			"code_shopify": "BOL",
+			"country_code": "CO"
+		},
+		{
+			"name": "Boyacá",
+			"code_2_digits": "BY",
+			"code_3_digits": "BOY",
+			"code_shopify": "BOY",
+			"country_code": "CO"
+		},
+		{
+			"name": "Caldas",
+			"code_2_digits": "CL",
+			"code_3_digits": "CAL",
+			"code_shopify": "CAL",
+			"country_code": "CO"
+		},
+		{
+			"name": "Caqueta",
+			"code_2_digits": "CA",
+			"code_3_digits": "CAQ",
+			"code_shopify": "CAQ",
+			"country_code": "CO"
+		},
+		{
+			"name": "Casanare",
+			"code_2_digits": "CS",
+			"code_3_digits": "CAS",
+			"code_shopify": "CAS",
+			"country_code": "CO"
+		},
+		{
+			"name": "Cauca",
+			"code_2_digits": "CU",
+			"code_3_digits": "CAU",
+			"code_shopify": "CAU",
+			"country_code": "CO"
+		},
+		{
+			"name": "Cesar",
+			"code_2_digits": "CE",
+			"code_3_digits": "CES",
+			"code_shopify": "CES",
+			"country_code": "CO"
+		},
+		{
+			"name": "Choco",
+			"code_2_digits": "CH",
+			"code_3_digits": "CHO",
+			"code_shopify": "CHO",
+			"country_code": "CO"
+		},
+		{
+			"name": "Cordoba",
+			"code_2_digits": "CO",
+			"code_3_digits": "COR",
+			"code_shopify": "COR",
+			"country_code": "CO"
+		},
+		{
+			"name": "Cundinamarca",
+			"code_2_digits": "CN",
+			"code_3_digits": "CUN",
+			"code_shopify": "CUN",
+			"country_code": "CO"
+		},
+		{
+			"name": "Guainia",
+			"code_2_digits": "GU",
+			"code_3_digits": "GUA",
+			"code_shopify": "GUA",
+			"country_code": "CO"
+		},
+		{
+			"name": "Guaviare",
+			"code_2_digits": "GA",
+			"code_3_digits": "GUV",
+			"code_shopify": "GUV",
+			"country_code": "CO"
+		},
+		{
+			"name": "Huila",
+			"code_2_digits": "HU",
+			"code_3_digits": "HUI",
+			"code_shopify": "HUI",
+			"country_code": "CO"
+		},
+		{
+			"name": "La Guajira",
+			"code_2_digits": "LG",
+			"code_3_digits": "LAG",
+			"code_shopify": "LAG",
+			"country_code": "CO"
+		},
+		{
+			"name": "Magdalena",
+			"code_2_digits": "MA",
+			"code_3_digits": "MAG",
+			"code_shopify": "MAG",
+			"country_code": "CO"
+		},
+		{
+			"name": "Meta",
+			"code_2_digits": "ME",
+			"code_3_digits": "MET",
+			"code_shopify": "MET",
+			"country_code": "CO"
+		},
+		{
+			"name": "Narino",
+			"code_2_digits": "NA",
+			"code_3_digits": "NAR",
+			"code_shopify": "NAR",
+			"country_code": "CO"
+		},
+		{
+			"name": "Norte de Santander",
+			"code_2_digits": "NS",
+			"code_3_digits": "NSA",
+			"code_shopify": "NSA",
+			"country_code": "CO"
+		},
+		{
+			"name": "Putumayo",
+			"code_2_digits": "PU",
+			"code_3_digits": "PUT",
+			"code_shopify": "PUT",
+			"country_code": "CO"
+		},
+		{
+			"name": "Quindio",
+			"code_2_digits": "QU",
+			"code_3_digits": "QUI",
+			"code_shopify": "QUI",
+			"country_code": "CO"
+		},
+		{
+			"name": "Risaralda",
+			"code_2_digits": "RI",
+			"code_3_digits": "RIS",
+			"code_shopify": "RIS",
+			"country_code": "CO"
+		},
+		{
+			"name": "San Andres y Providencia",
+			"code_2_digits": "SA",
+			"code_3_digits": "SAP",
+			"code_shopify": "SAP",
+			"country_code": "CO"
+		},
+		{
+			"name": "Santander",
+			"code_2_digits": "SN",
+			"code_3_digits": "SAN",
+			"code_shopify": "SAN",
+			"country_code": "CO"
+		},
+		{
+			"name": "Sucre",
+			"code_2_digits": "SU",
+			"code_3_digits": "SUC",
+			"code_shopify": "SUC",
+			"country_code": "CO"
+		},
+		{
+			"name": "Tolima",
+			"code_2_digits": "TO",
+			"code_3_digits": "TOL",
+			"code_shopify": "TOL",
+			"country_code": "CO"
+		},
+		{
+			"name": "Valle del Cauca",
+			"code_2_digits": "VC",
+			"code_3_digits": "VAC",
+			"code_shopify": "VAC",
+			"country_code": "CO"
+		},
+		{
+			"name": "Vaupes",
+			"code_2_digits": "VA",
+			"code_3_digits": "VAU",
+			"code_shopify": "VAU",
+			"country_code": "CO"
+		},
+		{
+			"name": "Vichada",
+			"code_2_digits": "VI",
+			"code_3_digits": "VID",
+			"code_shopify": "VID",
+			"country_code": "CO"
+		}
+	]
+}

@@ -1,0 +1,91 @@
+/* styles.module.css */
+
+.designsContainer {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px; /* Adjust the gap as needed */
+    max-height: 770px;
+    overflow-y: auto;
+  }
+  
+  .designItem {
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    cursor: pointer;
+    overflow: hidden; /* Ensure the image doesn't overflow the container */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .pagination{
+    height: 30px;
+    display: flex;
+    margin: 10px;
+    border-radius: 6px;
+    
+  }
+
+  .switchBtnOne{
+    outline: none;
+    border: none;
+    width: 100%;
+    border-radius: 6px 0px 0px 6px;
+    background-color: rgb(20, 131, 255);
+    color: #fff;
+    cursor: pointer;
+    margin-right: 2px;
+  }
+
+  .switchBtnSecond{
+    outline: none;
+    border: none;
+    width: 100%;
+    border-radius: 0px 6px 6px 0px;
+    background-color: rgb(20, 131, 255);
+    color: #fff;
+    cursor: pointer;
+    margin-left: 2px;
+  }
+
+  .imageItem {
+    width: auto; /* Allow the width to adjust to maintain the aspect ratio */
+    height: auto; /* Allow the height to adjust to maintain the aspect ratio */
+    max-width: 100%;
+    max-height: 100%;
+  }
+  
+  .designItem:hover {
+    background-color: #ececec;
+  }
+  
+  
+.categoriesContainer{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  right: 349px;
+  background: #fff;
+  box-shadow: 0px 0px 2px 2px #dedede;
+}
+
+  @media (max-width: 1100px) {
+    .designsContainer {
+      width: 100%;
+      overflow-y: hidden;
+    }
+
+    .categoriesPanel{
+      width: 100%;
+      right: 0px;
+    }
+
+    .categoriesContainer{
+      right: 0px;
+    }
+    
+  }
