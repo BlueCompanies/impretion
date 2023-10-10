@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const URI = process.env.MONGODB_URI;
+const URI = process.env.MONGODB_URI_ETHERNET;
 let connection;
 
 const connectDB = async () => {
