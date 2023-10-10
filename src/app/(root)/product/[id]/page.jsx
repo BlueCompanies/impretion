@@ -5,6 +5,7 @@ import { getProductById } from "@/app/_lib/productQueries";
 import connectDB from "@/app/_lib/connectDB";
 import { ImagesScroll, TableMeasures } from "./_components/TableMeasures";
 
+export const runtime = 'edge'
 
 // Product overview (before edition)
 export default async function ProductsDetails({ params }) {

@@ -9,6 +9,7 @@ import EditorView from "../_components/EditorView"
 import connectDB from "@/app/_lib/connectDB"
 import { getProductById } from "@/app/_lib/productQueries"
 
+export const runtime = 'edge'
 
 export default async function Editor({searchParams}){
     const {productId} = searchParams
