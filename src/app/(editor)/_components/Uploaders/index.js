@@ -65,6 +65,8 @@ export default function Uploaders() {
         body: formData,
       });
 
+      console.log(response);
+
       const imageData = await response.json();
       if (response.ok && response.status === 200) {
         const reader = new FileReader();
