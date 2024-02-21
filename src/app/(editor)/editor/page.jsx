@@ -28,6 +28,7 @@ const getProductById = async(id) => {
       })
     
       const data = await response.json()
+      console.log("DEITA: ", data)
       return {product:data.document}
     } catch (error) {
       console.log("Error: ", error)

@@ -24,9 +24,6 @@ const getProductById = async(id) => {
         }
       })
     })
-
-    console.log("ERRRRRE: ", response)
-  
     const data = await response.json()
     return {product:data.document}
   } catch (error) {
@@ -38,8 +35,7 @@ const getProductById = async(id) => {
 export default async function ProductsDetails({params}) {
   const {id} = params
   const {product} = await getProductById(id)
-  console.log("UY NO: ", product)
-
+  
 
   return (
     <>
