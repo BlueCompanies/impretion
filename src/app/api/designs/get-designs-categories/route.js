@@ -11,7 +11,7 @@ export async function GET(request) {
         method: "GET",
         headers: {
           "api-key":
-            "lVUsfwLvFxQjkat3L5Gvd6lDM00WV1Q0j43FW57WCuXJcpZ622DYXYenNPePsmCS",
+            "s5lWj1OL7r578NX3d8dcJ6TOfNrTPjQp3gfzWdF0trpmQEOX1z7DStx8eCwk7SfG",
         },
       }
     );

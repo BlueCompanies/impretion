@@ -13,7 +13,7 @@ const getProductById = async(id) => {
       headers: {
         "Content-Type":"application/json", 
         "Access-Control-Request-Headers":"*", 
-        "api-key":"Cc4kyqAYKaNwGAqx3UPnyzrZ0LSnTQFIIuIPSv6BCB4tfoVVoaZLMkUQlubmo2n0"
+        "api-key":"s5lWj1OL7r578NX3d8dcJ6TOfNrTPjQp3gfzWdF0trpmQEOX1z7DStx8eCwk7SfG"
       },
       body:JSON.stringify({
         "collection": "products",
@@ -25,6 +25,7 @@ const getProductById = async(id) => {
       })
     })
     const data = await response.json()
+    console.log("didi: ", data)
     return {product:data.document}
   } catch (error) {
     console.log("Error: ", error)

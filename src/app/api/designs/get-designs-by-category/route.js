@@ -13,7 +13,7 @@ export async function POST(request) {
           "Content-Type": "application/json",
           "Access-Control-Request-Headers": "*",
           "api-key":
-            "lVUsfwLvFxQjkat3L5Gvd6lDM00WV1Q0j43FW57WCuXJcpZ622DYXYenNPePsmCS",
+            "s5lWj1OL7r578NX3d8dcJ6TOfNrTPjQp3gfzWdF0trpmQEOX1z7DStx8eCwk7SfG",
         },
         body: JSON.stringify({
           designId,
