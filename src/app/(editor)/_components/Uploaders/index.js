@@ -60,39 +60,28 @@ export default function Uploaders() {
       formData.append("file", file);
 
       // Double checks if the image is truly a valid image with a buffer array validation.
-      const response = await fetch("api/image-validator", {
-        method: "POST",
-        body: formData,
-      });
 
-      console.log(response);
-
-      const imageData = await response.json();
-      if (response.ok && response.status === 200) {
-        const reader = new FileReader();
-        const inputId = uuidv4();
-        reader.onload = () => {
-          newLayer(sideIndex, {
-            id: inputId,
-            inputType: "image",
-            imageName: file.name,
-            source: reader.result,
-            justifyContent: "center", // Center horizontally by default
-            alignItems: "center", // Center vertically by default
-            imageExtension: imageData.extension,
-            transform: {
-              translate: "translate(0px, 0px)",
-              rotate: "rotate(0deg)",
-              scale: "scale(1)",
-            },
-            imageHeight,
-            imageWidth,
-          });
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("Ha ocurrido un error al subir tu archivo.");
-      }
+      const reader = new FileReader();
+      const inputId = uuidv4();
+      reader.onload = () => {
+        newLayer(sideIndex, {
+          id: inputId,
+          inputType: "image",
+          imageName: file.name,
+          source: reader.result,
+          justifyContent: "center", // Center horizontally by default
+          alignItems: "center", // Center vertically by default
+          //imageExtension: imageData.extension,
+          transform: {
+            translate: "translate(0px, 0px)",
+            rotate: "rotate(0deg)",
+            scale: "scale(1)",
+          },
+          imageHeight,
+          imageWidth,
+        });
+      };
+      reader.readAsDataURL(file);
     } else {
       alert("Solo se permiten archivos de imágenes JPG/JPEG/PNG.");
     }

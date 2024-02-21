@@ -4,6 +4,7 @@ import { fileTypeFromBuffer } from "file-type";
 export const runtime = "edge";
 export async function POST(request) {
   try {
+    /*
     const formDataFlag = await request.formData();
     const file = formDataFlag.get("file");
     const fileToBuffer = await file.arrayBuffer();
@@ -17,9 +18,9 @@ export async function POST(request) {
     ) {
       return NextResponse.json({}, { status: 400 });
     }
-
+     */
     // If the file type is allowed, return success
-    return NextResponse.json({ extension: fileType.ext }, { status: 200 });
+    //return NextResponse.json({ extension: fileType.ext }, { status: 200 });
   } catch (error) {
     // Handle errors
     return NextResponse.json({}, { status: 500 });
