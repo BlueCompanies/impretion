@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { fileTypeFromBuffer } from "file-type";
 
+export const runtime = "edge";
 export async function POST(request) {
   try {
     const formDataFlag = await request.formData();

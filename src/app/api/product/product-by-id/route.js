@@ -2,6 +2,7 @@ import connectDB from "@/app/_lib/connectDB";
 import Product from "@/app/_models/Product";
 import { NextResponse } from "next/server";
 
+export const runtime = "edge";
 export async function POST(request) {
   await connectDB();
   try {

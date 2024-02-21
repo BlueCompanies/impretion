@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+export const runtime = "edge";
 export async function POST(request) {
   try {
     // Log the received request to check its structure
