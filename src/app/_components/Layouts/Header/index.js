@@ -29,7 +29,7 @@ export default function MainHeader() {
     <header style={headerStyle}>
       <div style={navBarStyle}>
         <Link href="/" style={titleStyle}>
-          IMPRETION
+          impretion
         </Link>
       </div>
     </header>

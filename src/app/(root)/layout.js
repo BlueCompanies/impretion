@@ -9,7 +9,7 @@ export const metadata = {
 export default async function RootLayout({ params, children }) {
   return (
     <>
-      <title>Impretion</title>
+      <title>impretion</title>
       <MainHeader />
       <section>{children}</section>
     </>
