@@ -17,7 +17,6 @@
     "bcryptjs": "2.4.3",
     "eslint": "8.51.0",
     "eslint-config-next": "13.5.4",
-    "file-type": "^18.5.0",
     "html-to-image": "^1.11.11",
     "md5": "^2.3.0",
     "mongoose": "^7.6.1",
