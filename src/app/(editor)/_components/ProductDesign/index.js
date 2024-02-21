@@ -1,27 +1,25 @@
-"use client";
 import { useEffect, useRef, useState } from "react";
 import styles from "./styles.module.css";
 import {
   useDesignPanelHandler,
+  useGeneratedMockups,
   usePreviewMode,
   useStoreItems,
+  useWorkFlowSize,
 } from "@/app/_store";
 import { toPng } from "html-to-image";
 import { v4 as uuidv4 } from "uuid";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import awsS3 from "@/app/_lib/aws";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import Image from "next/image";
-import CommonLoader from "@/app/_components/Loaders/CommonLoader";
-import ImageCarousel from "@/app/_components/ImageCarrousel";
+import awsS3 from "@/app/_lib/aws";
+import GenericLoader from "@/app/_components/Loaders/MockupGeneratedLoader";
+
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 export default function ProductDesign({ product, children }) {
-  const iframeRef = useRef(null);
   const workflowRef = useRef(null); // Add a ref for the workflow div
-  const [finalPreview, setFinalPreview] = useState("");
   const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
-  const [processedSide, setProcessedSide] = useState(0);
   const [screenWidth, setScreenWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 0
   );
@@ -31,8 +29,32 @@ export default function ProductDesign({ product, children }) {
     message: "",
   });
 
+  // used variables
+  const photopeaRef = useRef(null);
   const sideIndexChanger = useStoreItems((state) => state.setSideIndex);
   const sideIndex = useStoreItems((state) => state.sideIndex);
+  const generatedMockups = useGeneratedMockups((state) => state.mockups);
+  const setGeneratedMockups = useGeneratedMockups((state) => state.setMockups);
+  const setGeneratedMockupsLength = useGeneratedMockups(
+    (state) => state.setMockupsLength
+  );
+  const resetGeneratedMockups = useGeneratedMockups(
+    (state) => state.resetMockups
+  );
+  const currentMockupImage = useGeneratedMockups(
+    (state) => state.currentMockupImage
+  );
+  const setCurrentMockupImage = useGeneratedMockups(
+    (state) => state.setCurrentMockupImage
+  );
+  const setWorkflowSize = useWorkFlowSize((state) => state.setSizes);
+
+  const [imagesUrl, setImagesUrl] = useState([]);
+  const [openedDocuments, setOpenedDocuments] = useState(0);
+  const [currentDocument, setCurrentDocument] = useState(0);
+  const [photopeaString, setPhotopeaString] = useState("");
+  const [isCanceled, setIsCanceled] = useState(false);
+  const [finalPreview, setFinalPreview] = useState([]);
 
   // Checks if preview mode variable
   const isPreviewing = usePreviewMode((state) => state.isPreviewing);
@@ -41,57 +63,88 @@ export default function ProductDesign({ product, children }) {
     (state) => state.setDesignPanel
   );
 
-  // Ensures to get a loader and not a final preview at the begining of the render
   useEffect(() => {
-    setFinalPreview("");
-    setProcessedSide(0);
-    sideIndexChanger(0);
-    setPanelHandler(false);
-    setSteps({
-      step: 0,
-      message: "",
-    });
-  }, [isPreviewing]);
+    if (product) {
+      const stringTemplate = `{"files":[${product?.editor?.mockups?.modelMockups
+        .map((mockup) => `"${mockup.psdUrl}"`)
+        .join(
+          ","
+        )}], "environment":{"localsave":false,"autosave":99999999,"menus":[],"panels":[]}}`;
+      const encodedString = encodeURIComponent(stringTemplate);
+      setPhotopeaString(encodedString);
+    }
+  }, [product]);
 
-  // Update the state with final preview images
-  const updateFinalPreviews = (dataUrl) => {
-    setFinalPreview((prevPreviews) => [...prevPreviews, dataUrl]);
-  };
+  // Photopea event handler
+  useEffect(() => {
+    const handleMessage = (event) => {
+      if (!photopeaRef.current) return;
+      if (event.data instanceof ArrayBuffer) {
+        const mimeType = "image/png";
+        const dataUrl = arrayBufferToDataURL(event.data, mimeType);
+        setGeneratedMockups(dataUrl);
+      }
+
+      if (event.data === "canceled") {
+        alert("Proceso cancelado!");
+      }
+
+      if (typeof event.data === "number") {
+        setOpenedDocuments(event.data);
+      }
+    };
+
+    // Add event listener to listen for messages from Photopea
+    window.addEventListener("message", handleMessage);
+
+    // Clean up event listener on component unmount
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+  }, []);
 
   useEffect(() => {
     const previewMode = async () => {
-      // It means that its the begining of the process and the user has set a diferent sideIndex manually, so it changes to 0
+      setGeneratedMockupsLength(product.editor.mockups.modelMockups.length);
 
-      //SE DEBE CAMBIAR ESTO, PARA QUE EL USUARIO TENGA QUE IR AL INDEX 0 (PRIMERA TAB) PARA PODER PROCESAR LAS COSAS.
-      //PARA AMBOS PREVIEWMODE Y SAVEMODE
-
-      if (processedSide < 1 && sideIndex > 0) sideIndexChanger(0);
-      if (processedSide < product.editor.sides.length) {
+      // Loading handler, ensures that the loading stops when generatedMockups is not empty anymore.
+      if (generatedMockups.length <= 0) {
         setLoading(true);
+      } else {
+        setLoading(false);
+      }
+
+      if (sideIndex < product.editor.sides.length) {
         const imgId = uuidv4();
+
         try {
-          const dataUrl = await toPng(workflowRef?.current, {
-            cacheBust: true,
-          });
-
-          const imageBuffer = Buffer.from(
-            dataUrl.replace(/^data:image\/\w+;base64,/, ""),
-            "base64"
-          );
-
-          let command = new PutObjectCommand({
-            Bucket: "impretion",
-            Key: `temp/${imgId}.png`,
-            Body: imageBuffer,
-          });
-
-          await awsS3()
-            .send(command)
-            .then(async () => {
-              setImageUrl(
-                `https://xyzstorage.store/impretion/temp/${imgId}.png`
-              );
+          setTimeout(async () => {
+            const dataUrl = await toPng(workflowRef?.current, {
+              cacheBust: true,
             });
+            console.log(dataUrl);
+            const imageBuffer = Buffer.from(
+              dataUrl.replace(/^data:image\/\w+;base64,/, ""),
+              "base64"
+            );
+            console.log("fuikiti: ", imageBuffer);
+            let command = new PutObjectCommand({
+              Bucket: "impretion",
+              Key: `temp-files/temp-user-raw-designs/${imgId}.png`,
+              Body: imageBuffer,
+            });
+
+            await awsS3().send(command);
+
+            setImagesUrl((prevImgs) => [
+              ...prevImgs,
+              {
+                imageUrl: `https://xyzstorage.store/temp-files/temp-user-raw-designs/${imgId}.png`,
+                side: product.editor.sides[sideIndex].sideType,
+              },
+            ]);
+            sideIndexChanger(sideIndex + 1);
+          }, 100);
         } catch (error) {
           console.error("Error in userProductPreview:", error);
         }
@@ -99,9 +152,111 @@ export default function ProductDesign({ product, children }) {
     };
 
     if (isPreviewing) previewMode();
-  }, [isPreviewing, processedSide, sideIndexChanger]);
+  }, [isPreviewing, sideIndex, generatedMockups]);
 
-  // imageUrl as parameter makes sure to execute the useEffect when the image is already loaded by the user avoiding possible bugs.
+  useEffect(() => {
+    console.log("i em gi: ", imagesUrl);
+  }, [imagesUrl]);
+
+  useEffect(() => {
+    console.log(imagesUrl, product.editor.sides.length);
+    if (imagesUrl.length >= product.editor.sides.length) {
+      const wnd = photopeaRef.current.contentWindow;
+      const PSDMockups = product.editor.mockups.modelMockups;
+
+      let rawImage;
+      if (imagesUrl.length > 1) {
+        rawImage = imagesUrl.find(
+          (image) => PSDMockups[currentDocument]?.sideType === image?.side
+        );
+      } else {
+        rawImage = imagesUrl[0];
+      }
+
+      if (currentDocument < openedDocuments) {
+        const scripts = [
+          `
+          try {
+            var documentIndex = ${currentDocument};
+            app.activeDocument = app.documents[documentIndex];
+            var docRef = app.activeDocument;
+            
+            function openSmartObjectContents(smartObjectLayer) {
+                if (!smartObjectLayer || smartObjectLayer.kind !== LayerKind.SMARTOBJECT) {
+                    return;
+                }
+                if (smartObjectLayer.name.startsWith("#")) { // Check if the name starts with "#"
+                    docRef.activeLayer = smartObjectLayer;
+                    var idEditContents = stringIDToTypeID("placedLayerEditContents");
+                    var desc = new ActionDescriptor();
+                    executeAction(idEditContents, desc, DialogModes.NO);
+                }
+            }
+            
+            for (var j = 0; j < docRef.layers.length; j++) {
+                var layer = docRef.layers[j];
+                openSmartObjectContents(layer);
+            }
+            } catch (e) {
+                alert("An error occurred: " + e);
+            }
+        
+              `,
+          `app.open("${rawImage?.imageUrl}", null, true)`,
+          `
+          // Delete layers with a "!" in their name except the newly added layer
+          var newLayerIndex = app.activeDocument.activeLayer.itemIndex;
+          var placeholderLayerFound = false; // Track if the "!placeholder" layer is found
+  
+          for (var i = app.activeDocument.layers.length - 1; i >= 0; i--) {
+            var currentLayer = app.activeDocument.layers[i];
+            if (i !== newLayerIndex && currentLayer.name.includes("!")) {
+            currentLayer.remove();
+            }
+  
+            // Check if the current layer is the "!placeholder" layer
+            if (currentLayer.name === "!placeholder") {
+              placeholderLayerFound = true;
+            }
+          }
+  
+          // If the "!placeholder" layer is not found, display a message
+          if (!placeholderLayerFound) {
+            app.echoToOE("placeholderLayerError");
+          } else {
+          // Rename the current layer to "!placeholder"
+            app.activeDocument.activeLayer.name = "!placeholder";
+            app.activeDocument.save();
+            app.activeDocument.close(SaveOptions.SAVECHANGES);
+          }
+          `,
+          `
+          app.activeDocument = app.documents[${currentDocument}];
+          var doc = app.activeDocument
+          alert(doc.layers.length)
+          doc.saveToOE("PNG");
+          `,
+        ];
+
+        const executeNextScript = (scriptIndex, callback) => {
+          if (scriptIndex === scripts.length) {
+            callback(); // Call the callback once all scripts are executed
+            return;
+          }
+          wnd.postMessage(scripts[scriptIndex], "*"); // Execute the current script
+          setTimeout(
+            () => executeNextScript(scriptIndex + 1, callback),
+            scriptIndex === 1 ? 1500 : 100
+          ); // Schedule the next script after a delay
+        };
+
+        // Start executing the scripts
+        executeNextScript(0, () => setCurrentDocument(currentDocument + 1));
+      }
+    }
+  }, [imagesUrl, currentDocument]);
+
+  /*
   useEffect(() => {
     if (imageUrl.length > 0 && product) {
       if (!iframeRef.current) return;
@@ -125,9 +280,10 @@ export default function ProductDesign({ product, children }) {
           var desc = new ActionDescriptor();
           executeAction(idEditContents, desc, DialogModes.NO);
         }
-
+ 
         try {
-          var activeDoc = app.activeDocument;
+          var docRef = app.documents[0];
+          var activeDoc = docRef;
           var foundLayerWithHash = false; // Flag to track if layers with "#" are found
           
           // Loop through all layers in the document
@@ -155,38 +311,38 @@ export default function ProductDesign({ product, children }) {
         `,
         `
         var activeDoc = app.activeDocument;
-
+ 
         // Delete layers with a "!" in their name except the newly added layer
         var newLayerIndex = app.activeDocument.activeLayer.itemIndex;
         var placeholderLayerFound = false; // Track if the "!placeholder" layer is found
-
+ 
         for (var i = app.activeDocument.layers.length - 1; i >= 0; i--) {
           var currentLayer = app.activeDocument.layers[i];
           if (i !== newLayerIndex && currentLayer.name.includes("!")) {
           currentLayer.remove();
           }
-
+ 
           // Check if the current layer is the "!placeholder" layer
           if (currentLayer.name === "!placeholder") {
             app.echoToOE("PREVIEWMODE");
             placeholderLayerFound = true;
           }
         }
-
+ 
         // If the "!placeholder" layer is not found, display a message
         if (!placeholderLayerFound) {
           app.echoToOE("placeholderLayerError");
         } else {
         // Rename the current layer to "!placeholder"
         app.activeDocument.activeLayer.name = "!placeholder";
-
+ 
           app.activeDocument.save();
           app.activeDocument.close(SaveOptions.SAVECHANGES);
           app.activeDocument.saveToOE("PNG");
         }
         `,
       ];
-
+ 
       const executeNextScript = (scriptIndex) => {
         if (scriptIndex >= scripts.length) {
           // All scripts executed successfully
@@ -197,7 +353,7 @@ export default function ProductDesign({ product, children }) {
           ...steps,
           step: scriptIndex,
         });
-
+ 
         const messageHandler = (e) => {
           // Placeholder layer not found.
           if (e.data === "placeholderLayerError") {
@@ -209,7 +365,7 @@ export default function ProductDesign({ product, children }) {
             );
             return;
           }
-
+ 
           // When main layer (#) is not found.
           if (e.data === "mainLayerError") {
             window.removeEventListener("message", messageHandler);
@@ -220,7 +376,7 @@ export default function ProductDesign({ product, children }) {
             );
             return;
           }
-
+ 
           if (
             (e.origin === "https://www.photopea.com" && e.data === "done") ||
             e.data instanceof ArrayBuffer ||
@@ -242,16 +398,50 @@ export default function ProductDesign({ product, children }) {
             return;
           }
         };
-
+ 
         window.addEventListener("message", messageHandler);
         photopea.postMessage(script, "*");
       };
       // Clear any existing event listeners before starting
       window.removeEventListener("message", executeNextScript);
-
+ 
       executeNextScript(0);
     }
   }, [imageUrl]);
+ 
+
+  
+  */
+  // imageUrl as parameter makes sure to execute the useEffect when the image is already loaded by the user avoiding possible bugs.
+
+  /*
+  useEffect(() => {
+    const messageHandler = (e) => {
+      if (
+        (e.origin === "https://www.photopea.com" &&
+          e.data instanceof ArrayBuffer) ||
+        e.data === "PREVIEWMODE"
+      ) {
+        const receivedData = e.data;
+        // Check if the received data is an ArrayBuffer
+        if (receivedData instanceof ArrayBuffer) {
+          const mimeType = "image/png";
+          const dataUrl = arrayBufferToDataURL(receivedData, mimeType);
+          updateFinalPreviews(dataUrl); // Store the final preview image
+          setProcessedSide(processedSide + 1);
+          sideIndexChanger(processedSide + 1);
+          setLoading(false);
+        }
+      }
+    };
+
+    window.addEventListener("message", messageHandler);
+
+    return () => {
+      window.removeEventListener("message", messageHandler);
+    };
+  }, []);
+   */
 
   useEffect(() => {
     // Update the screenWidth state when the window is resized
@@ -335,58 +525,35 @@ export default function ProductDesign({ product, children }) {
   }, [screenWidth]);
 
   useEffect(() => {
-    const messageHandler = (e) => {
-      if (
-        (e.origin === "https://www.photopea.com" &&
-          e.data instanceof ArrayBuffer) ||
-        e.data === "PREVIEWMODE"
-      ) {
-        const receivedData = e.data;
-        // Check if the received data is an ArrayBuffer
-        if (receivedData instanceof ArrayBuffer) {
-          const mimeType = "image/png";
-          const dataUrl = arrayBufferToDataURL(receivedData, mimeType);
-          console.log(dataUrl);
-          updateFinalPreviews(dataUrl); // Store the final preview image
-          setProcessedSide(processedSide + 1);
-          sideIndexChanger(processedSide + 1);
-          setLoading(false);
-        }
-      }
-    };
+    if (isPreviewing) {
+      if (!photopeaRef || !photopeaRef.current) return; // Check if photopeaRef or photopeaRef.current is null/undefined
+      const wnd = photopeaRef.current.contentWindow;
+      if (!wnd) return; // Check if contentWindow is null/undefined
+      setCurrentDocument(0);
+      setImagesUrl([]);
+      wnd.postMessage("app.echoToOE(app.documents.length)", "*");
+    } else {
+      setPreviewMode(false);
+      setFinalPreview("");
+      resetGeneratedMockups();
+      setGeneratedMockupsLength(0);
+      setCurrentMockupImage("");
+      sideIndexChanger(0);
+      setPanelHandler(false);
+    }
+  }, [isPreviewing]);
 
-    window.addEventListener("message", messageHandler);
-
-    return () => {
-      window.removeEventListener("message", messageHandler);
-    };
-  }, []);
-
-  const closePreview = () => {
-    setPreviewMode(false);
-    setFinalPreview("");
-  };
+  // Ensures that all objects shrink depending on the board's size
+  useEffect(() => {
+    setWorkflowSize({
+      width: product?.editor?.sides[sideIndex]?.width / divisorNumber,
+      height: product?.editor?.sides[sideIndex]?.height / divisorNumber,
+    });
+  }, [divisorNumber]);
 
   return (
     <>
-      <div style={{ width: "20%", height: "20%" }}>
-        {isPreviewing && !loading && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              margin: "5px",
-              width: "100vw",
-            }}
-          >
-            <button className={styles.outOfPreviewBtn} onClick={closePreview}>
-              <AiOutlineArrowLeft />
-              Salir de la previsualización
-            </button>
-          </div>
-        )}
-
+      <div>
         <div
           style={{
             position: "absolute",
@@ -400,10 +567,11 @@ export default function ProductDesign({ product, children }) {
               product?.editor?.sides[sideIndex]?.height / divisorNumber
             }px`,
             backgroundColor: "#fff",
+            overflow: "hidden", // Hide content that overflows the container
           }}
         >
-          <>
-            {isPreviewing ? (
+          {isPreviewing && (
+            <>
               <div className={styles.modalContainer}>
                 <div className={styles.modalContent}>
                   <div
@@ -419,105 +587,69 @@ export default function ProductDesign({ product, children }) {
                       backgroundColor: "#fff",
                     }}
                   >
-                    {finalPreview.length > 0 && (
-                      <div className={styles.imageContainer}>
-                        <ImageCarousel
-                          imageArray={finalPreview}
-                          styles={{
-                            imagesCSS: {
-                              maxWidth: "100%",
-                              maxHeight: "100%",
-                            },
-                            sliderCSS: {
-                              nextImageCSS: {
-                                position: "absolute",
-                                top: 0,
-                                right: 0,
-                                margin: "1%",
-                                padding: "0.5%",
-                                border: "none",
-                                borderRadius: "4px",
-                                color: "#fff",
-                                fontWeight: "600",
-                                outline: "none",
-                                fontSize: "2%",
-                                backgroundColor: "rgba(61, 61, 61, 0.55)",
-                                height: "98%", // Adjust to your needs
-                                cursor: "pointer",
-                              },
-                              previousImageCSS: {
-                                position: "absolute",
-                                top: 0,
-                                margin: "1%",
-                                padding: "0.5%",
-                                border: "none",
-                                borderRadius: "4px",
-                                color: "#fff",
-                                fontWeight: "600",
-                                outline: "none",
-                                fontSize: "2%",
-                                backgroundColor: "rgba(61, 61, 61, 0.55)",
-                                height: "98%", // Adjust to your needs
-                                cursor: "pointer",
-                              },
-                            },
-                          }}
-                        ></ImageCarousel>
+                    {currentMockupImage.length > 0 && (
+                      <img
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                        src={currentMockupImage}
+                      ></img>
+                    )}
+                    {loading && (
+                      <div className={styles.loadingContainer}>
+                        <GenericLoader />
                       </div>
                     )}
                   </div>
-
-                  {loading && (
-                    <div className={styles.loadingContainer}>
-                      <CommonLoader />
-                      <p style={{ fontSize: "22px" }}>Paso: {steps.step}/3</p>
-                    </div>
-                  )}
                 </div>
               </div>
-            ) : (
-              <Image
-                src={product?.editor?.sides[sideIndex]?.templateUrl} // template url
-                width={
-                  product?.editor?.sides[sideIndex]?.templateWidth /
-                  divisorNumber
-                }
-                height={
-                  product?.editor?.sides[sideIndex]?.templateHeight /
-                  divisorNumber
-                }
-                style={{
-                  position: "absolute",
-                  zIndex: "999999",
-                  pointerEvents: "none",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                }}
-              />
-            )}
-            <div
-              className="workflow"
-              ref={workflowRef} // Assign the ref to the div
-              style={{
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-                backgroundColor: "transparent",
-                display: "flex", // Set display to flex
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              {children}
-            </div>
-          </>
+            </>
+          )}
+
+          <div
+            className="workflow"
+            ref={workflowRef} // Assign the ref to the div
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              backgroundColor: "transparent",
+              display: "flex", // Set display to flex
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {children}
+          </div>
+        </div>
+        {!isPreviewing && (
+          <Image
+            src={product?.editor?.sides[sideIndex]?.templateUrl} // template url
+            width={
+              product?.editor?.sides[sideIndex]?.templateWidth / divisorNumber
+            }
+            height={
+              product?.editor?.sides[sideIndex]?.templateHeight / divisorNumber
+            }
+            style={{
+              position: "absolute",
+              zIndex: "999999",
+              pointerEvents: "none",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          />
+        )}
+        {photopeaString && (
           <iframe
-            ref={iframeRef}
-            src="https://www.photopea.com"
+            ref={photopeaRef}
+            src={`https://www.photopea.com#${photopeaString}`}
             style={{ width: "100%", height: "100%", display: "none" }}
           />
-        </div>
+        )}
       </div>
     </>
   );

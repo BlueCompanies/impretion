@@ -8,13 +8,27 @@ export const useStoreItems = create((set) => ({
   // Action to set new text properties (including textContent)
   setNewTextProperties: (newProperties, sideIndex, textId) =>
     set((state) => {
+      console.log(newProperties);
       return {
         layerItems: state.layerItems.map((item) => {
           if (item.id === sideIndex) {
             // This is the sideIndex you want to update
             const updatedData = item.data.map((dataItem) => {
               if (dataItem.id === textId) {
+                // when textcontent is "" then null
+                if (newProperties.newTextContent === "") {
+                  return {
+                    ...dataItem,
+                    textContent: null,
+                  };
+                }
                 switch (true) {
+                  case !!newProperties.newTextColor:
+                    console.log("xd: ", newProperties.newTextColor);
+                    return {
+                      ...dataItem,
+                      textColor: newProperties.newTextColor,
+                    };
                   case !!newProperties.newTextContent:
                     return {
                       ...dataItem,
@@ -25,6 +39,7 @@ export const useStoreItems = create((set) => ({
                       ...dataItem,
                       fontFamily: newProperties.newFontFamily,
                     };
+
                   case !!newProperties.newFontSize:
                     // Regular expression to find the scale value
                     const regex = /scale\([^,]+,\s*[^)]+\)/g;
@@ -116,7 +131,6 @@ export const useStoreItems = create((set) => ({
 
   setNewLayerItem: (id, newData) =>
     set((state) => {
-      console.log(state.layerItems);
       // Find the index of the item with the matching id
       const itemIndex = state.layerItems.findIndex((item) => item.id === id);
       if (itemIndex !== -1) {
@@ -140,8 +154,34 @@ export const useStoreItems = create((set) => ({
       }
     }),
 
+  setMultipleLayerItems: (id, newDataArray) =>
+    set((state) => {
+      // Find the index of the item with the matching id
+      const itemIndex = state.layerItems.findIndex((item) => item.id === id);
+      if (itemIndex !== -1) {
+        // If an item with the same id exists, add newDataArray to the beginning of its data array
+        const updatedItems = [...state.layerItems];
+        updatedItems[itemIndex].data = [
+          ...newDataArray,
+          ...updatedItems[itemIndex].data,
+        ];
+        return { layerItems: updatedItems };
+      } else {
+        return {
+          layerItems: [
+            ...state.layerItems,
+            {
+              id: id,
+              data: newDataArray,
+            },
+          ],
+        };
+      }
+    }),
+
   setNewStyles: (id, transformProps, sideIndex) =>
     set((state) => {
+      //console.log("local store: ", localStorage.getItem(id));
       return {
         layerItems: state.layerItems.map((item) => {
           if (item.id === sideIndex) {
@@ -197,6 +237,44 @@ export const useCurrentUser = create((set) => ({
 export const useOrderFormSent = create((set) => ({
   formSubmit: false,
   setFormSubmit: (value) => set((state) => ({ formSubmit: value })),
+}));
+
+// Workflow size
+export const useWorkFlowSize = create((set) => {
+  return {
+    sizes: {
+      width: 0,
+      height: 0,
+    },
+    setSizes: (newSizes) =>
+      set((state) => ({
+        sizes: { ...state.sizes, ...newSizes },
+      })),
+  };
+});
+// Final result of the mockups
+export const useGeneratedMockups = create((set) => ({
+  mockups: [],
+  setMockups: (value) =>
+    set((state) => ({ mockups: [...state.mockups, value] })),
+
+  mockupsLength: 0,
+  setMockupsLength: (value) =>
+    set(() => ({
+      mockupsLength: value, // Set mockupsLength to the passed value
+    })),
+
+  resetMockups: () =>
+    set(() => ({
+      mockups: [], // Set the mockups array to an empty array
+    })),
+
+  // Right side mockup image selection
+  currentMockupImage: "",
+  setCurrentMockupImage: (value) =>
+    set(() => ({
+      currentMockupImage: value,
+    })),
 }));
 
 /*

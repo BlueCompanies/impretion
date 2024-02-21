@@ -77,32 +77,3 @@
     display: none;
   }
 
-  @media screen and (max-width: 1400px) {
-    .buyBtn {
-      width: 100%;
-      margin: 0px;
-      border-radius: 0px;
-    }
-  }
-
-  @media screen and (max-width: 1100px) {
-    .buyBtn {
-      width: 50%;
-      margin: 0px;
-      border-radius: 0px;
-      position: relative;
-      display: none;
-    }
-
-    .buyResponsiveBtn{
-      display: block;
-      width: 100%;
-      outline: none;
-      border: none;
-      padding: 10px;
-      margin-left: 5px;
-      border-radius: 0px 6px 6px 0px;
-      background-color: rgb(1, 165, 89);
-      color: #fff;
-    }
-  }

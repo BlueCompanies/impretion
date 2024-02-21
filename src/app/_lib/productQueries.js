@@ -47,6 +47,7 @@ export async function getProductsByField(fields) {
 // Get product by its id.
 export async function getProductById(id) {
   try {
+    console.log(id);
     const result = await Product.findById(id);
     return result;
   } catch (error) {

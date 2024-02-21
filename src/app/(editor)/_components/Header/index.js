@@ -10,6 +10,7 @@ import {
 } from "react-icons/bs";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { AiOutlineArrowLeft } from "react-icons/ai";
 
 export default function Header({ productId, productName, editor }) {
   const isPreviewing = usePreviewMode((state) => state.isPreviewing);
@@ -27,9 +28,20 @@ export default function Header({ productId, productName, editor }) {
     changeIndex(index);
   };
 
+  const closePreview = () => {
+    setPreviewMode(false);
+  };
+
   return (
     <>
       <div className={styles.header}>
+        {isPreviewing && (
+          <button className={styles.outOfPreviewBtn} onClick={closePreview}>
+            <AiOutlineArrowLeft />
+            Salir de la previsualización
+          </button>
+        )}
+
         <div
           style={{
             display: "flex",

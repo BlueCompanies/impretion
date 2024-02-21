@@ -14,8 +14,8 @@ import TextItemVisual from "./Items/TextItemVisual";
 import styles from "./styles.module.css";
 
 import DesignItemVisual from "./Items/DesignItemVisual";
-import ProductDesign from "../ProductDesign";
 import Designs from "../Designs";
+import ProductDesign from "../ProductDesign";
 
 export default function EditorView({ product }) {
   const moveableRef = useRef(null);
@@ -44,11 +44,7 @@ export default function EditorView({ product }) {
   );
   const formState = useOrderFormSent((state) => state.formSubmit);
 
-  const [propsTransform, setPropsTransform] = useState({
-    translate: "",
-    scale: "",
-    rotate: "",
-  });
+  const [propsTransform, setPropsTransform] = useState([]);
 
   const [currentId, setCurrentId] = useState("");
 
@@ -101,60 +97,39 @@ export default function EditorView({ product }) {
     const matchScale = drag.match(regexScale);
     const matchRotation = drag.match(rotationRegex);
 
-    // Initialize a copy of the current state
-    let updatedPropsTransform = { ...propsTransform };
+    // Initialize new objects for transformation values
+    let newTransform = {};
 
     if (matchTranslate) {
-      const translateProp = matchTranslate[0];
-      updatedPropsTransform.translate = translateProp;
+      newTransform.translate = matchTranslate[0];
     }
 
     if (matchScale) {
-      const scaleProp = matchScale[0];
-      updatedPropsTransform.scale = scaleProp;
+      newTransform.scale = matchScale[0];
     }
 
     if (matchRotation) {
-      const rotationProp = matchRotation[0];
-      updatedPropsTransform.rotate = rotationProp;
+      newTransform.rotate = matchRotation[0];
     }
 
-    // Set the updated state with both translate and rotate
-    setPropsTransform(updatedPropsTransform);
-  };
-
-  useEffect(() => {
-    const foundItem = layers[sideIndex]?.data?.find(
-      (object) => object.id === currentId[0]
+    // Check if propsTransform already contains an object with the currentId
+    const existingIndex = propsTransform.findIndex(
+      (item) => item.id === currentId[0]
     );
-    console.log(foundItem);
-    if (foundItem?.transformProps === undefined) {
-      if (
-        propsTransform.rotate !== "" ||
-        propsTransform.scale !== "" ||
-        propsTransform.translate !== ""
-      ) {
-        setPropsTransform({
-          translate: "",
-          scale: "",
-          rotate: "",
-        });
-        useStoreItems.getState().setNewStyles(
-          currentId[0],
-          {
-            translate: "",
-            scale: "",
-            rotate: "",
-          },
-          sideIndex
-        );
-      }
+
+    // If the id doesn't exist, add a new object
+    if (existingIndex === -1) {
+      setPropsTransform([
+        ...propsTransform,
+        { id: currentId[0], transform: newTransform },
+      ]);
     } else {
-      useStoreItems
-        .getState()
-        .setNewStyles(currentId[0], propsTransform, sideIndex);
+      // If the id exists, update the transform value of the existing object
+      const updatedPropsTransform = [...propsTransform];
+      updatedPropsTransform[existingIndex].transform = newTransform;
+      setPropsTransform(updatedPropsTransform);
     }
-  }, [propsTransform]);
+  };
 
   useEffect(() => {
     // Extract the IDs from the DOM elements
@@ -171,6 +146,8 @@ export default function EditorView({ product }) {
     setSelectedLayers(extractedIDs);
     setCurrentId(extractedIDs);
   }, [targets]);
+
+  useEffect(() => {}, [currentId]);
 
   const handleShowPanel = () => {
     console.log(showPanel);
@@ -258,8 +235,8 @@ export default function EditorView({ product }) {
               dragFocusedInput={true}
               startDragRotate={0}
               throttleDragRotate={0}
-              snapGridWidth={0}
-              snapGridHeight={0}
+              snapGridWidth={5}
+              snapGridHeight={5}
               isDisplayGridGuidelines={true}
               scalable={true}
               rotatable={true}
@@ -269,13 +246,22 @@ export default function EditorView({ product }) {
               contentEditable={true}
               elementGuidelines={[".container"]}
               rotationPosition={"top"}
-              bounds={{
-                left: 0,
-                top: 0,
-                right: 0,
-                bottom: 0,
-                position: "css",
+              snapDirections={{
+                top: true,
+                left: true,
+                bottom: true,
+                right: true,
               }}
+              verticalGuidelines={[50, 150, 250, 450, 550]}
+              horizontalGuidelines={[0, 100, 200, 400, 500]}
+              /*
+              warpable={true}
+              renderDirections={["nw", "n", "ne", "w", "e", "sw", "s", "se"]}
+              onWarp={(e) => {
+                e.target.style.transform = e.transform;
+              }}
+               */
+
               onDragStart={(e) => {
                 if (
                   ["input", "select"].indexOf(e.target.tagName.toLowerCase()) >
@@ -302,13 +288,8 @@ export default function EditorView({ product }) {
                 });
                 stylePropsChange(e.target.id, e.target.style.transform);
               }}
-              onBound={(e) => {
-                console.log(e);
-                stylePropsChange(e.target.id, e.target.style.transform);
-              }}
               onClickGroup={(e) => {
                 selectoRef.current?.clickTarget(e.inputEvent, e.inputTarget);
-                stylePropsChange(e.target.id, e.target.style.transform);
               }}
             />
           )}
@@ -326,6 +307,22 @@ export default function EditorView({ product }) {
                       id={item.id}
                       transformProps={item.transformProps}
                       source={item.source}
+                      item={item}
+                      // Iterate over the visual items and pass the appropriate transform data to each TextItemVisual component.
+                      // We find the corresponding transform object from the propsTransform array based on the item's id.
+                      // If a matching transform object is found, it's passed to the TextItemVisual component.
+                      // This ensures that each TextItemVisual receives its own transform data, allowing individual item transformations to be applied correctly.
+                      width={item.imageWidth}
+                      height={item.imageHeight}
+                      transform={
+                        propsTransform.find(
+                          (transform) => transform.id === item.id
+                        )?.transform
+                          ? propsTransform.find(
+                              (transform) => transform.id === item.id
+                            )?.transform
+                          : item.transform
+                      }
                     />
                   );
                 }
@@ -339,7 +336,15 @@ export default function EditorView({ product }) {
                       fontFamily={item.fontFamily}
                       textContent={item.textContent}
                       textColor={item.textColor}
-                      sideIndex={sideIndex}
+                      transform={
+                        propsTransform.find(
+                          (transform) => transform.id === item.id
+                        )?.transform
+                          ? propsTransform.find(
+                              (transform) => transform.id === item.id
+                            )?.transform
+                          : item.transform
+                      }
                     />
                   );
                 }
@@ -352,6 +357,17 @@ export default function EditorView({ product }) {
                         designUrl={item.designUrl}
                         transformProps={item.transformProps}
                         id={item.id}
+                        width={item.width}
+                        height={item.height}
+                        transform={
+                          propsTransform.find(
+                            (transform) => transform.id === item.id
+                          )?.transform
+                            ? propsTransform.find(
+                                (transform) => transform.id === item.id
+                              )?.transform
+                            : item.transform
+                        }
                       />
                     </>
                   );

@@ -6,14 +6,16 @@ const TextItemVisual = function TextItemVisual({
   fontFamily,
   textContent,
   textColor,
-  transformProps,
+  transform,
   id,
 }) {
+  /*
   const combinedTransform = `
   ${transformProps?.translate || ""} 
   ${transformProps?.rotate || ""} 
   ${transformProps?.scale || ""}
   `;
+   */
 
   return (
     <span
@@ -28,7 +30,13 @@ const TextItemVisual = function TextItemVisual({
         cursor: "pointer",
         pointerEvents: "auto",
         // Use current for the transform property
-        transform: combinedTransform,
+        //transform: combinedTransform,
+
+        transform: `${
+          (transform?.translate ? transform.translate + " " : "") +
+          (transform?.rotate ? transform.rotate + " " : "") +
+          (transform?.scale ? transform.scale : "")
+        }`,
       }}
     >
       {textContent}

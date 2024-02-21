@@ -10,10 +10,8 @@ import { v4 as uuidv4 } from "uuid";
 import { TbTextSize } from "react-icons/tb";
 import { BsFillPencilFill, BsFillStarFill, BsImage } from "react-icons/bs";
 import { useEffect, useState } from "react";
-import BuyModalWindow from "./BuyModal";
 
-export default function Uploaders({ product }) {
-  const [currentProduct, setCurrentProduct] = useState({});
+export default function Uploaders() {
   const [showLayersBtn, setShowLayersBtn] = useState(false);
 
   // Adds a new layer to the current layers array (layerItems []).
@@ -29,10 +27,6 @@ export default function Uploaders({ product }) {
   );
 
   const showPanel = useDesignPanelHandler((state) => state.designPanel);
-
-  useEffect(() => {
-    setCurrentProduct(JSON.parse(product));
-  }, [product]);
 
   // Spawns a new image for as layer and visual item with default values
   const newImageHandler = async (e) => {
@@ -66,7 +60,7 @@ export default function Uploaders({ product }) {
       formData.append("file", file);
 
       // Double checks if the image is truly a valid image with a buffer array validation.
-      const response = await fetch("api/client/image-validator", {
+      const response = await fetch("api/image-validator", {
         method: "POST",
         body: formData,
       });
@@ -84,6 +78,11 @@ export default function Uploaders({ product }) {
             justifyContent: "center", // Center horizontally by default
             alignItems: "center", // Center vertically by default
             imageExtension: imageData.extension,
+            transform: {
+              translate: "translate(0px, 0px)",
+              rotate: "rotate(0deg)",
+              scale: "scale(1)",
+            },
             imageHeight,
             imageWidth,
           });
@@ -105,13 +104,20 @@ export default function Uploaders({ product }) {
       inputType: "text",
       textContent: "Nuevo texto",
       fontSize: "48px",
+      textColor: "#000000",
       fontFamily: "arial",
       justifyContent: "center", // Center horizontally by default
       alignItems: "center", // Center vertically by default
+      transform: {
+        translate: "translate(0px, 0px)",
+        rotate: "rotate(0deg)",
+        scale: "scale(1)",
+      },
     });
   };
 
   // Switch the panel global variable (true or false), this opens the design panel
+  // newDesignHandler is on Designs component
   const newDesignHandler = () => {
     setPanelHandler(!showPanel);
   };
@@ -199,46 +205,6 @@ export default function Uploaders({ product }) {
               >
                 Agregar
               </button>
-            </div>
-
-            <div className={styles.bottom}>
-              <div className={styles.impretionInfo}>
-                {Object.keys(currentProduct).length > 0 && (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      fontSize: "17px",
-                      margin: "auto",
-                      background: "#e3e4e5",
-                      color: "#333",
-                      padding: "6px",
-                    }}
-                  >
-                    <p>Area de impresión</p>
-                    <span>
-                      {currentProduct?.canvasSize?.width?.pixels}x
-                      {currentProduct?.canvasSize?.height?.pixels}
-                      <span> pixeles </span>
-                      <span> (300 DPI)</span>
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              <BuyModalWindow currentProduct={JSON.stringify(currentProduct)} />
-
-              <div className={styles.payuMsg}>
-                <hr />
-                <span
-                  style={{ marginTop: "15px", fontSize: "10px", color: "#333" }}
-                >
-                  Utilizamos PayU como metodo de pago para que tu compra sea
-                  segura.
-                </span>
-              </div>
             </div>
           </div>
         </>

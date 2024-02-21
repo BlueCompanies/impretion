@@ -1,45 +1,46 @@
+"use client";
+
 import { useEffect, useState, useMemo } from "react";
 import styles from "./styles.module.css";
 import { v4 as uuidv4 } from "uuid";
 import { useStoreItems } from "@/app/_store";
-
 import { AiFillFilter } from "react-icons/ai";
 import { BiSolidCategory } from "react-icons/bi";
 import CommonLoader from "@/app/_components/Loaders/CommonLoader";
+import Image from "next/image";
 
-async function getDesigns(currentPage) {
-  const response = await fetch(
-    "/api/client/original-designs/get-original-designs",
-    {
+async function getAllDesigns(currentPage) {
+  try {
+    const response = await fetch(`/api/designs/get-all-designs`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ currentPage: currentPage.currentPage }),
+      body: JSON.stringify(currentPage),
+    });
+    if (response.status === 200) {
+      const data = await response.json();
+      return { response, data };
+    } else {
+      alert("Ha ocurrido un error al obtener los diseños.");
+      return;
     }
-  );
-
-  const data = await response.json();
-  return { response, data };
+  } catch (error) {
+    alert("Ha ocurrido un error al obtener los diseños.");
+  }
 }
 
 async function getCategoriesDesigns() {
-  const response = await fetch(
-    "/api/client/original-designs/get-designs-categories"
-  );
-
+  const response = await fetch("/api/designs/get-designs-categories");
   const data = await response.json();
-  return { response, data };
+  return { data };
 }
 
 async function searchDesigns(searchValue, e) {
   e.preventDefault();
-  const response = await fetch(
-    "/api/client/original-designs/search-original-designs",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ searchValue }),
-    }
-  );
+  const response = await fetch("/api/designs/search-designs", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ searchValue }),
+  });
 
   const data = await response.json();
   return { response, data };
@@ -49,7 +50,7 @@ export default function Designs() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [designs, setDesigns] = useState([]);
-  const [designsTotal, setTotalDesigns] = useState(0);
+  const [totalDesigns, setTotalDesigns] = useState(0);
   const [showAllDesigns, setShowAllDesigns] = useState(true);
   const [minSearchLengthError, setMinSearchLengthError] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -57,7 +58,12 @@ export default function Designs() {
   const [categories, setCategories] = useState([]);
   const [filteredPath, setFilteredPath] = useState("");
 
+  const [searchLoading, setSearchLoading] = useState(false);
+
   const newLayer = useStoreItems((state) => state.setNewLayerItem);
+  const newMultipleLayers = useStoreItems(
+    (state) => state.setMultipleLayerItems
+  );
   const sideIndex = useStoreItems((state) => state.sideIndex);
 
   useEffect(() => {
@@ -65,7 +71,7 @@ export default function Designs() {
       try {
         // Fetch data only if it's not already cached
 
-        const { response, data } = await getDesigns({
+        const { response, data } = await getAllDesigns({
           currentPage,
         });
 
@@ -81,7 +87,7 @@ export default function Designs() {
           return;
         }
         setDesigns(data.designs);
-        setTotalDesigns(data.designsLength);
+        setTotalDesigns(data.totalDocuments);
         setLoading(false);
       } catch (error) {
         setError(error);
@@ -95,10 +101,8 @@ export default function Designs() {
   useEffect(() => {
     const showCategoriesFunction = async () => {
       if (showCategories) {
-        setLoading(true);
         const categories = await getCategoriesDesigns();
-        setCategories(categories.data);
-        setLoading(false);
+        setCategories(categories.data.designsByCategory);
       }
     };
 
@@ -117,18 +121,34 @@ export default function Designs() {
     }
   };
 
-  const addDesignHandler = (url, name) => {
+  const newDesignHandler = (url, name, width, height, d) => {
     const inputId = uuidv4();
     newLayer(sideIndex, {
       id: inputId,
       inputType: "design",
       designUrl: url,
       designName: name,
+      width,
+      height,
+      transform: {
+        translate: "translate(0px, 0px)",
+        rotate: "rotate(0deg)",
+        scale: "scale(1)",
+      },
     });
+  };
+
+  const newConstructedDesignsHandler = (url, groupedItems) => {
+    const itemsWithId = groupedItems.map((element) => {
+      const inputId = uuidv4(); // Generate a new id for each object
+      return { ...element, id: inputId };
+    });
+    newMultipleLayers(sideIndex, itemsWithId);
   };
 
   const handleDesignSearch = async (e) => {
     e.preventDefault();
+    setSearchLoading(true);
     const searchValue = e.target[0].value;
     if (searchValue.length < 3) {
       setMinSearchLengthError(true);
@@ -137,25 +157,25 @@ export default function Designs() {
     const { response, data } = await searchDesigns(searchValue, e);
     if (!response.ok) {
       setError("Hubo un error en el servidor.");
-      setLoading(false);
+      setSearchLoading(false);
       return;
     }
 
     if (response.status >= 400) {
       setError("Error interno de la aplicación.");
-      setLoading(false);
+      setSearchLoading(false);
       return;
     }
-    setDesigns(data.designs); // Use the setDesigns function
+    setDesigns(data); // Use the setDesigns function
     setShowAllDesigns(false);
     minSearchLengthError && setMinSearchLengthError(false);
-    setLoading(false);
+    setSearchLoading(false);
   };
 
   const showAllDesignsHandler = async () => {
     if (!showAllDesigns) {
       setShowAllDesigns(true);
-      const { response, data } = await getDesigns({
+      const { response, data } = await getAllDesigns({
         currentPage,
       });
 
@@ -177,14 +197,11 @@ export default function Designs() {
   };
 
   async function getDesignsByCategory(designId, keyword) {
-    const response = await fetch(
-      "/api/client/original-designs/by-category-original-designs",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ designId, keyword }),
-      }
-    );
+    const response = await fetch("/api/designs/get-designs-by-category", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ designId, keyword }),
+    });
 
     if (!response.ok) {
       alert("Ha ocurrido un error al obtener los diseños.");
@@ -310,7 +327,7 @@ export default function Designs() {
           )}
         </div>
 
-        <div style={{ margin: "10px" }}>
+        <div style={{ margin: "60px 20px 0px 20px" }}>
           <form
             style={{
               display: "flex",
@@ -355,7 +372,7 @@ export default function Designs() {
                 ></input>
                 <input
                   type="submit"
-                  value="Buscar"
+                  value={searchLoading ? "..." : "Buscar"}
                   style={{
                     outline: minSearchLengthError
                       ? "1px solid red"
@@ -367,6 +384,7 @@ export default function Designs() {
                     borderRadius: "0px 4px 4px 0px",
                     cursor: "pointer",
                     background: minSearchLengthError ? "red" : "#1483FF",
+                    width: "80px",
                     color: "#fff",
                   }}
                 ></input>
@@ -412,28 +430,48 @@ export default function Designs() {
         </div>
 
         {showAllDesigns === true && (
-          <div className={styles.pagination}>
-            <button
-              className={styles.switchBtnOne}
-              onClick={previousPage}
-              disabled={currentPage === 1}
-              style={{
-                background: currentPage === 1 && "rgb(155, 201, 255)",
-              }}
-            >
-              Anterior
-            </button>
-            <button
-              className={styles.switchBtnSecond}
-              onClick={nextPage}
-              disabled={currentPage * 20 >= designsTotal}
-              style={{
-                background:
-                  currentPage * 20 >= designsTotal && "rgb(155, 201, 255)",
-              }}
-            >
-              Siguiente
-            </button>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+          >
+            <div className={styles.pagination}>
+              <button
+                className={styles.switchBtnOne}
+                onClick={previousPage}
+                disabled={currentPage === 1}
+                style={{
+                  background: currentPage === 1 && "rgb(155, 201, 255)",
+                }}
+              >
+                Anterior
+              </button>
+              <button
+                className={styles.switchBtnSecond}
+                onClick={nextPage}
+                disabled={currentPage * 20 >= totalDesigns}
+                style={{
+                  background:
+                    currentPage * 20 >= totalDesigns && "rgb(155, 201, 255)",
+                }}
+              >
+                Siguiente
+              </button>
+            </div>
+            {totalDesigns > 0 && (
+              <span
+                style={{
+                  marginLeft: "10px",
+                  fontSize: "14px",
+                  color: "#909190",
+                  marginBottom: "8px",
+                }}
+              >
+                Diseños totales: {totalDesigns}
+              </span>
+            )}
           </div>
         )}
 
@@ -465,12 +503,31 @@ export default function Designs() {
             <div className={styles.designsContainer}>
               {designs?.length > 0 ? (
                 designs.map((design) => (
-                  <div key={design._id} className={styles.designItem}>
-                    <img
+                  <div
+                    key={design._id}
+                    className={styles.designItem}
+                    onClick={
+                      design.groupedItems === undefined
+                        ? () =>
+                            newDesignHandler(
+                              design.url,
+                              design.type,
+                              design.width,
+                              design.height
+                            )
+                        : () =>
+                            newConstructedDesignsHandler(
+                              design.url,
+                              design.groupedItems
+                            )
+                    }
+                  >
+                    <Image
                       src={design.url}
                       alt={design.name}
                       className={styles.imageItem}
-                      onClick={() => addDesignHandler(design.url, design.type)}
+                      width={100}
+                      height={100}
                     />
                   </div>
                 ))

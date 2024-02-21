@@ -168,7 +168,7 @@ export default function Layers() {
                       onSelectedCSS={
                         selectedLayers.includes(item.id)
                           ? {
-                              backgroundColor: "#c7c8c9",
+                              border: "4px solid #c7c8c9",
                             }
                           : ""
                       }
@@ -177,6 +177,7 @@ export default function Layers() {
                       dragStart={(e) => dragStart(e, index)}
                       textId={item.id}
                       index={index}
+                      textColor={item.textColor}
                       deleteLayerHandler={deleteLayerHandler}
                     />
                   )}
@@ -234,6 +235,7 @@ export default function Layers() {
                           isDragging === index ? styles.dragging : ""
                         }`}
                       >
+                        {console.log("mierda: ", item)}
                         {item?.inputType === "text" && (
                           <TextItemLayer
                             textFamily={item.textFamily}
@@ -250,6 +252,7 @@ export default function Layers() {
                             textId={item.id}
                             index={index}
                             deleteLayerHandler={deleteLayerHandler}
+                            textColor={item.textColor}
                           />
                         )}
                         {item?.inputType === "image" && (

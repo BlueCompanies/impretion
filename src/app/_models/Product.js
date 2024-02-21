@@ -1,5 +1,4 @@
-import mongoose, { model, models, Schema } from "mongoose";
-import bcryptjs from "bcryptjs";
+import { model, models, Schema } from "mongoose";
 
 const ProductSchema = new Schema({
   name: String,

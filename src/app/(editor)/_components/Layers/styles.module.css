@@ -13,7 +13,7 @@
     background-color: #ffffff;
     border: 1px solid #cccccc;
     margin-top: 20px;
-    max-height: 570px;
+    max-height: 520px;
 }
 
     .buy {
@@ -29,6 +29,13 @@
   }
 
   .layersBtn{display: none;}
+
+  @media screen and (max-height: 800px) {
+    .dropZone {
+      height: 300px;
+    }
+
+}
 
   @media screen and (max-width: 1100px) {
     .header {
@@ -61,9 +68,10 @@
       padding: 10px;
       border: none;
       outline: none;
-      background-color: var(--primary-color);
-      color: #fff;
+      color: #3b3b3b;
+      font-weight: 700;
       cursor: pointer;
+      border: 1px solid #dedede;
     }
 }
 

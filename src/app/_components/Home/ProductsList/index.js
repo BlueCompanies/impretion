@@ -76,11 +76,23 @@ export default async function ProductsList() {
                         >
                           <p
                             style={{
-                              fontSize: "16px",
+                              fontSize: "17px",
                               width: "100%",
                             }}
                           >
-                            Desde 5.000 COP hasta 3.000 COP
+                            Desde{" "}
+                            {(
+                              product?.productData?.prices?.basePrice -
+                              (product?.productData?.prices?.basePrice *
+                                product?.productData?.prices?.discounts[
+                                  product?.productData?.prices?.discounts
+                                    .length - 1
+                                ]?.percentage) /
+                                100
+                            )?.toLocaleString()}{" "}
+                            COP hasta{" "}
+                            {product?.productData?.prices?.basePrice?.toLocaleString()}{" "}
+                            COP
                           </p>
                         </div>
 

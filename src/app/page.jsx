@@ -3,11 +3,13 @@ import { GiColombia } from "react-icons/gi";
 import { BsFillBrushFill } from "react-icons/bs";
 import { AiFillShop } from "react-icons/ai";
 import ProductsList from "./_components/Home/ProductsList";
+import MainHeader from "./_components/Layouts/Header";
 //import LookProductsButton from "./_components/HomePage/LookProductsButton";
 
 export default async function Home() {
   return (
     <>
+     <MainHeader  />
       <section className={styles.sectionShape}>
         <img
           className={styles.homepageImg}

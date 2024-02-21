@@ -1,23 +1,51 @@
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { FaPaintRoller } from "react-icons/fa";
 import styles from "./styles.module.css";
-import { getProductById } from "@/app/_lib/productQueries";
-import connectDB from "@/app/_lib/connectDB";
 import { ImagesScroll, TableMeasures } from "./_components/TableMeasures";
+
 
 export const runtime = 'edge'
 
+const getProductById = async(id) => {
+  try {
+    const response = await fetch("https://sa-east-1.aws.data.mongodb-api.com/app/data-lqpho/endpoint/data/v1/action/findOne", {
+      method:"POST",
+      headers: {
+        "Content-Type":"application/json", 
+        "Access-Control-Request-Headers":"*", 
+        "api-key":"Cc4kyqAYKaNwGAqx3UPnyzrZ0LSnTQFIIuIPSv6BCB4tfoVVoaZLMkUQlubmo2n0"
+      },
+      body:JSON.stringify({
+        "collection": "products",
+        "database": "impretion",
+        "dataSource": "Impretion",
+        "filter": {
+          "_id": { "$oid": id }
+        }
+      })
+    })
+
+    console.log("ERRRRRE: ", response)
+  
+    const data = await response.json()
+    return {product:data.document}
+  } catch (error) {
+    console.log("Error: ", error)
+  }
+}
+
 // Product overview (before edition)
-export default async function ProductsDetails({ params }) {
-    const {id} = params
-    await connectDB();
-    const product = await getProductById(id)
- 
+export default async function ProductsDetails({params}) {
+  const {id} = params
+  const {product} = await getProductById(id)
+  console.log("UY NO: ", product)
+
 
   return (
     <>
-      <div className={styles.productContainer}>
-        <div>
+    {product &&
+    <>
+        <div className={styles.productContainer}>
         <div className={styles.productPresentation}>
           <div className={styles.productImages}>
             <div className={styles.imageContainer}>
@@ -77,18 +105,14 @@ export default async function ProductsDetails({ params }) {
             
           </div>
         </div>
-        {/* Access to the current product overview with query params */}
-            <a href={`/editor?productId=${product?._id}`}>
-         
+            <a href={`/editor?productId=${product?._id}`} style={{width:"100%"}}>
               <div className={styles.editLink}>
                 Empezar a diseñar
                 <FaPaintRoller style={{ marginLeft: "10px" }} />
               </div>
-    
             </a>
-        </div>
-        
-        <div className={styles.productInfo}>
+
+            <div className={styles.productInfo}>
           <h2
             style={{ marginTop:"10px", fontSize: "30px", display: "flex", alignItems: "center" }}
           >
@@ -119,10 +143,12 @@ export default async function ProductsDetails({ params }) {
             Medidas 
           </h2>
             <TableMeasures productMeasures={product.measures}/>
-          
         </div>
-      </div>
-  
+        </div>
+        
+        
+    </>
+    }
     </>
   );
 }

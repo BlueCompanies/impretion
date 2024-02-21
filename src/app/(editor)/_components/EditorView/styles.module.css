@@ -5,7 +5,7 @@
     background: #fff;
     width: 350px;
     border: 1px solid #e3e4e5;
-    z-index: 99999;
+    z-index: 9999999999;
 }
 
 .boardContainer{
@@ -16,6 +16,7 @@
   height: 100%;
   background-color: #f0f0f0;
   overflow: hidden;
+  clip-path: url(#workflow);
 }
 
 .mobileCloseBtn{

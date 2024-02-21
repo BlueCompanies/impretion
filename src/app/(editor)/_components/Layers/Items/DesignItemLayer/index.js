@@ -29,20 +29,19 @@ export default function DesignItemLayer({
               height: "100%",
             }}
           >
-            <p>
-              <span
-                style={{
-                  backgroundColor: "#19a7ce",
-                  color: "#fff",
-                  padding: "4px 5px 4px 5px",
-                  margin: "7px",
-                  borderRadius: "5px",
-                  fontSize: "12px",
-                }}
-              >
-                {designName}
-              </span>
-            </p>
+            <span
+              className={styles.designDescription}
+              style={{
+                backgroundColor: "#19a7ce",
+                color: "#fff",
+                padding: "4px 5px 4px 5px",
+                margin: "7px",
+                borderRadius: "5px",
+                fontSize: "12px",
+              }}
+            >
+              {designName}
+            </span>
           </div>
         </div>
 

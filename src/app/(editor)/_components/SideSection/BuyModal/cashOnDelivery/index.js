@@ -379,7 +379,7 @@ export default function CashOnDelivery(props) {
               >
                 <p style={{ fontSize: "16px" }}>
                   <span style={{ fontWeight: "700" }}>2.</span> Elige la
-                  cantidad de productos.
+                  cantidad.
                 </p>
               </div>
               <div
@@ -567,7 +567,7 @@ export default function CashOnDelivery(props) {
             <input
               name="confirmationUrl"
               type="hidden"
-              value="https://wild-guests-nail.loca.lt/api/new-order/normal-order/confirmation"
+              value="https://nine-stars-warn.loca.lt/api/orders/normal-order/confirmation"
             />
 
             <div

@@ -7,18 +7,11 @@ export const metadata = {
 };
 
 export default async function RootLayout({ params, children }) {
-  console.log(params);
   return (
     <>
-      <html>
-        <head>
-          <title>Impretion</title>
-        </head>
-        <body>
-          <MainHeader />
-          {children}
-        </body>
-      </html>
+      <title>Impretion</title>
+      <MainHeader />
+      <section>{children}</section>
     </>
   );
 }

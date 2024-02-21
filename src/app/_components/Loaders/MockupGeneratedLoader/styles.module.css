@@ -1,0 +1,40 @@
+/* styles.module.css */
+.loadingSpinner {
+    width: 200px;
+    height: 200px;
+    display: inline-block;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0);
+  }
+  
+  .spinner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform: translateZ(0) scale(1);
+    backface-visibility: hidden;
+    transform-origin: 0 0;
+  }
+  
+  .spinner div {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border: 4px solid #afafaf;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite; /* Reference keyframes animation */
+    top: 100px;
+    left: 100px;
+  }
+  
+  /* Define the keyframes animation */
+  @keyframes spin {
+    0% {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+  
