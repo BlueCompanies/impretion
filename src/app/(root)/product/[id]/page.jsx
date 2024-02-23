@@ -36,7 +36,7 @@ const getProductById = async(id) => {
 export default async function ProductsDetails({params}) {
   const {id} = params
   const {product} = await getProductById(id)
-  
+
 
   return (
     <>
@@ -99,15 +99,29 @@ export default async function ProductsDetails({params}) {
                 ))}
               </ul>
             </div>
-            
-          </div>
-        </div>
-            <a href={`/editor?productId=${product?._id}`} style={{width:"100%"}}>
-              <div className={styles.editLink}>
+            <div style={{background:"#dedede", padding:"15px", margin:"15px 0px 15px 0px", borderRadius:"4px"}}>
+             {(
+              product?.productData?.prices?.basePrice -
+              (product?.productData?.prices?.basePrice *
+                product?.productData?.prices?.discounts[
+                  product?.productData?.prices?.discounts
+                    .length - 1
+                ]?.percentage) /
+                100
+            )?.toLocaleString()}{" "}
+            COP hasta{" "}
+            {product?.productData?.prices?.basePrice?.toLocaleString()}{" "}
+            COP
+            </div>
+            <a href={`/editor?productId=${product?._id}`} style={{width:"100%", marginTop:0}}>
+              <div className={styles.editorBtn}>
                 Empezar a diseñar
                 <FaPaintRoller style={{ marginLeft: "10px" }} />
               </div>
             </a>
+          </div>
+        </div>
+            
 
             <div className={styles.productInfo}>
           <h2

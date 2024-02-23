@@ -87,13 +87,13 @@
     width: 85%;
   }
   
-  .editLink {
+  .editorBtn {
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 4px;
     padding: 8px;
-    margin: 8px;
+
     width: 100%;
     background-color: rgba(20,131,255,1);
     color: #fff;
@@ -134,7 +134,7 @@
     padding: 8px;
   }
 
-  @media screen and (max-width: 1095px) {
+  @media screen and (max-width: 1310px) {
     .productPresentation{
       flex-direction: column;
     }

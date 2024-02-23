@@ -1,4 +1,4 @@
-import CommonLoader from "@/app/_components/Loaders/CommonLoader";
+import Loader from "@/app/_components/Loaders/Loader";
 
 export default function ProductDetailLoading() {
     return (
@@ -15,7 +15,7 @@ export default function ProductDetailLoading() {
           background: "white",
         }}
       >
-        <CommonLoader/>
+        <Loader/>
       </div>
     );
   }

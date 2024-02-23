@@ -6,8 +6,8 @@ import { v4 as uuidv4 } from "uuid";
 import { useStoreItems } from "@/app/_store";
 import { AiFillFilter } from "react-icons/ai";
 import { BiSolidCategory } from "react-icons/bi";
-import CommonLoader from "@/app/_components/Loaders/CommonLoader";
 import Image from "next/image";
+import BasicLoader from "@/app/_components/Loaders/Loader";
 
 async function getAllDesigns(currentPage) {
   try {
@@ -123,6 +123,7 @@ export default function Designs() {
 
   const newDesignHandler = (url, name, width, height, d) => {
     const inputId = uuidv4();
+    console.log(width, height);
     newLayer(sideIndex, {
       id: inputId,
       inputType: "design",
@@ -246,12 +247,7 @@ export default function Designs() {
                 />
                 <span>Diseños por categoria</span>
               </div>
-              <div
-                style={{
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
+              <div>
                 <div
                   style={{
                     border: "1px solid #9e9e9e",
@@ -317,7 +313,7 @@ export default function Designs() {
                       }}
                     >
                       <>
-                        <CommonLoader />
+                        <BasicLoader />
                       </>
                     </div>
                   )}
@@ -550,7 +546,7 @@ export default function Designs() {
               justifyContent: "center",
             }}
           >
-            <CommonLoader />
+            <BasicLoader />
           </div>
         )}
       </>

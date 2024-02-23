@@ -54,11 +54,9 @@ export default function ProductDesign({ product, children }) {
   const [currentDocument, setCurrentDocument] = useState(0);
   const [photopeaString, setPhotopeaString] = useState("");
   const [isCanceled, setIsCanceled] = useState(false);
-  const [finalPreview, setFinalPreview] = useState([]);
 
   // Checks if preview mode variable
   const isPreviewing = usePreviewMode((state) => state.isPreviewing);
-  const setPreviewMode = usePreviewMode((state) => state.setPreviewMode);
   const setPanelHandler = useDesignPanelHandler(
     (state) => state.setDesignPanel
   );
@@ -86,7 +84,12 @@ export default function ProductDesign({ product, children }) {
       }
 
       if (event.data === "canceled") {
-        alert("Proceso cancelado!");
+        setImagesUrl([]);
+        sideIndexChanger(0);
+        resetGeneratedMockups();
+        return () => {
+          window.removeEventListener("message", handleMessage);
+        };
       }
 
       if (typeof event.data === "number") {
@@ -122,12 +125,10 @@ export default function ProductDesign({ product, children }) {
             const dataUrl = await toPng(workflowRef?.current, {
               cacheBust: true,
             });
-            console.log(dataUrl);
             const imageBuffer = Buffer.from(
               dataUrl.replace(/^data:image\/\w+;base64,/, ""),
               "base64"
             );
-            console.log("fuikiti: ", imageBuffer);
             let command = new PutObjectCommand({
               Bucket: "impretion",
               Key: `temp-files/temp-user-raw-designs/${imgId}.png`,
@@ -155,13 +156,11 @@ export default function ProductDesign({ product, children }) {
   }, [isPreviewing, sideIndex, generatedMockups]);
 
   useEffect(() => {
-    console.log("i em gi: ", imagesUrl);
-  }, [imagesUrl]);
-
-  useEffect(() => {
-    console.log(imagesUrl, product.editor.sides.length);
-    if (imagesUrl.length >= product.editor.sides.length) {
-      const wnd = photopeaRef.current.contentWindow;
+    if (!isPreviewing) {
+      return;
+    }
+    const wnd = photopeaRef.current.contentWindow;
+    if (imagesUrl.length >= product.editor.sides.length && isPreviewing) {
       const PSDMockups = product.editor.mockups.modelMockups;
 
       let rawImage;
@@ -254,7 +253,7 @@ export default function ProductDesign({ product, children }) {
         executeNextScript(0, () => setCurrentDocument(currentDocument + 1));
       }
     }
-  }, [imagesUrl, currentDocument]);
+  }, [imagesUrl, currentDocument, isPreviewing]);
 
   /*
   useEffect(() => {
@@ -525,21 +524,16 @@ export default function ProductDesign({ product, children }) {
   }, [screenWidth]);
 
   useEffect(() => {
+    if (!photopeaRef || !photopeaRef.current) return; // Check if photopeaRef or photopeaRef.current is null/undefined
+    const wnd = photopeaRef.current.contentWindow;
     if (isPreviewing) {
-      if (!photopeaRef || !photopeaRef.current) return; // Check if photopeaRef or photopeaRef.current is null/undefined
-      const wnd = photopeaRef.current.contentWindow;
       if (!wnd) return; // Check if contentWindow is null/undefined
       setCurrentDocument(0);
       setImagesUrl([]);
+      setPanelHandler(false);
       wnd.postMessage("app.echoToOE(app.documents.length)", "*");
     } else {
-      setPreviewMode(false);
-      setFinalPreview("");
-      resetGeneratedMockups();
-      setGeneratedMockupsLength(0);
-      setCurrentMockupImage("");
-      sideIndexChanger(0);
-      setPanelHandler(false);
+      wnd.postMessage("app.echoToOE('canceled')", "*");
     }
   }, [isPreviewing]);
 

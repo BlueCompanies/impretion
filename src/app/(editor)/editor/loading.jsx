@@ -1,4 +1,4 @@
-import CommonLoader from "@/app/_components/Loaders/CommonLoader";
+import BasicLoader from "@/app/_components/Loaders/Loader";
 
 export default function EditorLoading() {
     return (
@@ -15,7 +15,7 @@ export default function EditorLoading() {
           background: "white",
         }}
       >
-        <CommonLoader/>
+        <BasicLoader/>
       </div>
     );
   }

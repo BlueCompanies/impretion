@@ -13,6 +13,7 @@ export default function DesignItemVisual({
   const [scaledWidth, setScaledWidth] = useState(width);
   const [scaledHeight, setScaledHeight] = useState(height);
 
+  console.log(width, height);
   useEffect(() => {
     const widthRatio = width / workflowSize.width;
     const heightRatio = height / workflowSize.height;

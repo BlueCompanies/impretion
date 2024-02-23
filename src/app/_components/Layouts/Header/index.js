@@ -5,7 +5,7 @@ export default function MainHeader() {
     display: "flex",
     alignItems: "center",
     padding: "10px",
-    height: "70px",
+    height: "90px",
     background: "#fff",
     margin: "auto",
     zIndex: 100,
@@ -29,7 +29,7 @@ export default function MainHeader() {
     <header style={headerStyle}>
       <div style={navBarStyle}>
         <Link href="/" style={titleStyle}>
-          impretion
+          <img src="/logo.svg"></img>
         </Link>
       </div>
     </header>

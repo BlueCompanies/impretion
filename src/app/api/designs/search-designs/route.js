@@ -7,7 +7,7 @@ export async function POST(request) {
   console.log(searchValue);
   try {
     const response = await fetch(
-      `https://sa-east-1.aws.data.mongodb-api.com/app/data-lqpho/endpoint/searchDesigns`,
+      `https://sa-east-1.aws.data.mongodb-api.com/app/data-lqpho/endpoint/searchDesigns?ms=${Date.now()}`,
       {
         method: "POST",
         headers: {
@@ -15,6 +15,9 @@ export async function POST(request) {
           "Access-Control-Request-Headers": "*",
           "api-key":
             "s5lWj1OL7r578NX3d8dcJ6TOfNrTPjQp3gfzWdF0trpmQEOX1z7DStx8eCwk7SfG",
+          "cache-control": "no-cache",
+          pragma: "no-cache",
+          "cache-control": "no-store",
         },
         body: JSON.stringify({
           searchValue,

@@ -11,7 +11,6 @@ import { useOrderFormSent, usePreviewMode, useStoreItems } from "@/app/_store";
 import awsS3 from "@/app/_lib/aws";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import CashOnDelivery from "./cashOnDelivery";
-import CommonLoader from "@/app/_components/Loaders/CommonLoader";
 
 function BuyModalWindow({ currentProduct }) {
   const formRef = useRef(null);
@@ -119,7 +118,6 @@ function BuyModalWindow({ currentProduct }) {
   useEffect(() => {
     if (currentProduct) {
       try {
-        console.log("CURRENT P NO PARSED: ", currentProduct);
         const parsedProduct = JSON.parse(currentProduct);
         console.log("parsed P: ", parsedProduct);
         setProduct(parsedProduct);

@@ -1,0 +1,75 @@
+.firstSection{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    margin: auto;
+  }
+
+  .secondSection{
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .text{
+    color: var(--main-text-color);
+  }
+
+  
+  .subtitle{
+    font-size: 25px;
+    width: fit-content;
+    font-weight: 700;
+    color: var(--main-text-color);
+  }
+  
+  .target{
+    width: 100%;
+    margin: 5px;
+    padding: 10px;
+    border-radius: 4px;
+    background: #fff;
+  }
+
+  .card{
+    background: #fff;
+    width: 250px;
+    height: 80%;
+    border-radius: 6px;
+    padding: 10px;
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .step{
+    margin-top: 5px;
+  }
+
+  .bodyTextCard{
+    margin-top: 10px;
+    color: #555555;
+    font-size: 15px;
+  }
+
+  .cardImage{
+    margin-bottom: 0;
+  }
+
+  .cardImageContainer{
+    margin-top: auto;
+  }
+
+
+  /* Poner las media queries para adaptar la presentacion principal */
+  @media (max-width: 1500px) {
+    .firstSection{
+      width: 80%;
+    }
+
+    .secondSection{
+      width: 80%;
+    }
+  }

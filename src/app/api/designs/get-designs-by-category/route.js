@@ -6,7 +6,7 @@ export async function POST(request) {
   const { designId, keyword } = await request.json();
   try {
     const response = await fetch(
-      `https://sa-east-1.aws.data.mongodb-api.com/app/data-lqpho/endpoint/getDesignsByCategory`,
+      `https://sa-east-1.aws.data.mongodb-api.com/app/data-lqpho/endpoint/getDesignsByCategory?ms=${Date.now()}`,
       {
         method: "POST",
         headers: {
@@ -14,6 +14,9 @@ export async function POST(request) {
           "Access-Control-Request-Headers": "*",
           "api-key":
             "s5lWj1OL7r578NX3d8dcJ6TOfNrTPjQp3gfzWdF0trpmQEOX1z7DStx8eCwk7SfG",
+          "cache-control": "no-cache",
+          pragma: "no-cache",
+          "cache-control": "no-store",
         },
         body: JSON.stringify({
           designId,
@@ -24,6 +27,7 @@ export async function POST(request) {
 
     if (response.status === 200) {
       const data = await response.json();
+      console.log(data);
       return NextResponse.json(data, { status: 200 });
     } else {
       return NextResponse.json({}, { status: 404 });

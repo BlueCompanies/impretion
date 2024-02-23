@@ -20,6 +20,11 @@ time, mark, audio, video {
     font-family: sans-serif;
 }
 
+:root {
+  --main-text-color:#212121;
+  --main-color: #;
+}
+
 body {
   width: 100%;
   height: 100vh;

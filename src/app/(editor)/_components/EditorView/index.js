@@ -150,22 +150,26 @@ export default function EditorView({ product }) {
   useEffect(() => {}, [currentId]);
 
   const handleShowPanel = () => {
-    console.log(showPanel);
     setPanelHandler(false);
   };
 
   return (
     <>
       <div className={styles.boardContainer} id="board">
-        {showPanel && (
-          <div className={styles.designsPanel}>
-            <button onClick={handleShowPanel} className={styles.mobileCloseBtn}>
-              <span>X</span>
-              <span>cerrar</span>
-            </button>
-            <Designs />
-          </div>
-        )}
+        <div style={{ display: isPreviewing ? "none" : "block" }}>
+          {showPanel && (
+            <div className={styles.designsPanel}>
+              <button
+                onClick={handleShowPanel}
+                className={styles.mobileCloseBtn}
+              >
+                <span>X</span>
+                <span>cerrar</span>
+              </button>
+              <Designs />
+            </div>
+          )}
+        </div>
         {/* If is in preview mode the selecto gets disabled */}
         {!isPreviewing && (
           <Selecto

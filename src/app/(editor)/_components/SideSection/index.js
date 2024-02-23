@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import styles from "./styles.module.css";
 import Uploaders from "../Uploaders";
 import Layers from "../Layers";
-import { useGeneratedMockups, usePreviewMode } from "@/app/_store";
+import {
+  useDesignPanelHandler,
+  useGeneratedMockups,
+  usePreviewMode,
+} from "@/app/_store";
 import GenericLoader from "@/app/_components/Loaders/MockupGeneratedLoader";
 import BuyModalWindow from "./BuyModal";
 
@@ -16,6 +20,17 @@ export default function SideSection({ product }) {
   const setCurrentMockupImage = useGeneratedMockups(
     (state) => state.setCurrentMockupImage
   );
+  const resetGeneratedMockups = useGeneratedMockups(
+    (state) => state.resetMockups
+  );
+  const setGeneratedMockupsLength = useGeneratedMockups(
+    (state) => state.setMockupsLength
+  );
+  const setPanelHandler = useDesignPanelHandler(
+    (state) => state.setDesignPanel
+  );
+  const setPreviewMode = usePreviewMode((state) => state.setPreviewMode);
+
   const [parsedProduct, setParsedProduct] = useState({});
 
   // Parses the product data as its stringified.
@@ -24,17 +39,17 @@ export default function SideSection({ product }) {
     setParsedProduct(parsedProduct);
   }, [product]);
 
+  // State to keep track of loaded images
+  const [loadedImages, setLoadedImages] = useState(
+    new Array(generatedMockupsLength).fill(false)
+  );
+
   useEffect(() => {
     // Sets the first element by default if the array is not empty.
     if (generatedMockups.length > 0) {
       setCurrentMockupImage(generatedMockups[0]);
     }
   }, [generatedMockups]);
-
-  // State to keep track of loaded images
-  const [loadedImages, setLoadedImages] = useState(
-    new Array(generatedMockupsLength).fill(false)
-  );
 
   useEffect(() => {
     // Reset loadedImages array when mockups length changes
@@ -53,6 +68,17 @@ export default function SideSection({ product }) {
   const currentSelectedImage = (src) => {
     setCurrentMockupImage(src);
   };
+
+  useEffect(() => {
+    if (!isPreviewing) {
+      setLoadedImages([]);
+      resetGeneratedMockups();
+      setGeneratedMockupsLength(0);
+      setCurrentMockupImage("");
+      setPreviewMode(false);
+      setPanelHandler(false);
+    }
+  }, [isPreviewing]);
 
   return (
     <>
