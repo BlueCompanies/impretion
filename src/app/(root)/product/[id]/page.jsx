@@ -76,7 +76,7 @@ export default async function ProductsDetails({params}) {
               >
                 {product?.colors?.map((color, index) => (
                   <li
-                    key={index}
+                    key={color}
                     style={{
                       marginTop: "5px",
                       marginLeft: "5px",
@@ -124,7 +124,7 @@ export default async function ProductsDetails({params}) {
           </h2>
           <ul>
             {product?.materials?.map((material, index) => (
-              <li key={index} className={styles.productMaterial}>
+              <li key={material} className={styles.productMaterial}>
                 <IoIosCheckmarkCircle
                   style={{
                     color: "rgba(20,131,255,1)",

@@ -355,25 +355,23 @@ export default function EditorView({ product }) {
 
                 if (item.inputType === "design") {
                   return (
-                    <>
-                      <DesignItemVisual
-                        key={item.id}
-                        designUrl={item.designUrl}
-                        transformProps={item.transformProps}
-                        id={item.id}
-                        width={item.width}
-                        height={item.height}
-                        transform={
-                          propsTransform.find(
-                            (transform) => transform.id === item.id
-                          )?.transform
-                            ? propsTransform.find(
-                                (transform) => transform.id === item.id
-                              )?.transform
-                            : item.transform
-                        }
-                      />
-                    </>
+                    <DesignItemVisual
+                      key={item.id}
+                      designUrl={item.designUrl}
+                      transformProps={item.transformProps}
+                      id={item.id}
+                      width={item.width}
+                      height={item.height}
+                      transform={
+                        propsTransform.find(
+                          (transform) => transform.id === item.id
+                        )?.transform
+                          ? propsTransform.find(
+                              (transform) => transform.id === item.id
+                            )?.transform
+                          : item.transform
+                      }
+                    />
                   );
                 }
                 return null; // Add this to handle other cases

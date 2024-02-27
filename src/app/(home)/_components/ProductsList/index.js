@@ -58,7 +58,7 @@ export default async function ProductsList() {
                           Colores:
                           {product.colors.map((color, index) => (
                             <div
-                              key={index}
+                              key={color}
                               style={{
                                 backgroundColor: `${color}`,
                                 marginLeft: "6px",

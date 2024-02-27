@@ -545,7 +545,7 @@ export default function Designs() {
             <div className={styles.designsContainer}>
               {designs?.length > 0 ? (
                 designs.map((design, index) => (
-                  <div key={index}>
+                  <div key={design._id}>
                     {showDesignInfoModal === index && (
                       <div
                         style={{
@@ -589,6 +589,7 @@ export default function Designs() {
                                 borderRadius: "4px",
                                 cursor: "pointer",
                               }}
+                              key={tag}
                               onClick={(e) => {
                                 handleDesignSearch(e, "tag", tag),
                                   setOverlay(false);

@@ -123,7 +123,7 @@ export function ImagesScroll({ productImages }) {
       <div className={styles.imageScroll}>
         {productImages?.map((imageSrc, index) => (
           <img
-            key={index}
+            key={imageSrc}
             onClick={() => setImageSource(imageSrc)}
             className={styles.productImage}
             src={imageSrc}

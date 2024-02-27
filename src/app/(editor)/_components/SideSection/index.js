@@ -215,7 +215,7 @@ export default function SideSection({ product }) {
       {isPreviewing && (
         <div className={styles.mockupSection}>
           {generatedMockups.map((mockup, index) => (
-            <div key={index}>
+            <div key={mockup}>
               <img
                 src={mockup}
                 alt={`Mockup ${index}`}
