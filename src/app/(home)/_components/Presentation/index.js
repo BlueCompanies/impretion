@@ -181,8 +181,7 @@ export default function Presentation() {
                 gratis.
               </p>
             </div>
-            {/*
-          
+
             <div className={styles.target}>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <img src="home/icons/customer-service.svg"></img>
@@ -195,7 +194,6 @@ export default function Presentation() {
                 nosotros.
               </p>
             </div>
-            */}
           </div>
         </section>
       </div>
