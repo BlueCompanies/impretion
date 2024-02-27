@@ -70,6 +70,10 @@
     flex-wrap: wrap;
   }
 
+
+  .secondSectionItemsContainer{
+    flex-wrap: nowrap;
+  }
   
   .itemsContainer{
     flex-wrap: nowrap;
@@ -77,6 +81,12 @@
 
   .image-container {
     max-width: 100%;
+  }
+
+  @media screen and (max-width: 850px){
+    .secondSectionItemsContainer{
+      flex-wrap: wrap;
+    }
   }
 
   @media screen and (max-width: 930px){

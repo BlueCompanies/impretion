@@ -114,7 +114,8 @@ export default function Presentation() {
       >
         <section className={styles.secondSection}>
           <div
-            style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+            style={{ display: "flex", flexDirection: "row" }}
+            className={styles.secondSectionItemsContainer}
           >
             <div className={styles.target}>
               <div style={{ display: "flex", alignItems: "center" }}>
@@ -154,7 +155,8 @@ export default function Presentation() {
           </div>
 
           <div
-            style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+            style={{ display: "flex", flexDirection: "row" }}
+            className={styles.secondSectionItemsContainer}
           >
             <div className={styles.target}>
               <div style={{ display: "flex", alignItems: "center" }}>
