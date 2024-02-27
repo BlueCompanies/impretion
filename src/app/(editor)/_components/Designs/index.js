@@ -545,7 +545,7 @@ export default function Designs() {
             <div className={styles.designsContainer}>
               {designs?.length > 0 ? (
                 designs.map((design, index) => (
-                  <>
+                  <div key={index}>
                     {showDesignInfoModal === index && (
                       <div
                         style={{
@@ -692,7 +692,7 @@ export default function Designs() {
                         </div>
                       )}
                     </div>
-                  </>
+                  </div>
                 ))
               ) : (
                 <>
