@@ -21,8 +21,8 @@ export default function Presentation() {
             display: "flex",
             width: "100%",
             marginTop: "0px",
-            flexWrap: "wrap",
           }}
+          className={styles.itemsContainer}
         >
           <div
             style={{

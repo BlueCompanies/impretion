@@ -70,12 +70,22 @@
     flex-wrap: wrap;
   }
 
+  
+  .itemsContainer{
+    flex-wrap: nowrap;
+  }
 
-  .imageContainer {
+  .image-container {
     max-width: 100%;
   }
+
+  @media screen and (max-width: 930px){
+    .itemsContainer{
+      flex-wrap: wrap;
+    }
+  }
   
-  @media screen and (max-width: 700px) {
+  @media screen and (max-width: 1100px) {
     .imageContainer {
       max-width: 80%; /* Adjust this value as needed */
     }
