@@ -1,4 +1,4 @@
-import Loader from "@/app/_components/Loaders/Loader";
+import BasicLoader from "@/app/_components/Loaders/Loader";
 
 export default function ProductDetailLoading() {
     return (
@@ -12,10 +12,10 @@ export default function ProductDetailLoading() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          background: "white",
+          background: "#fff",
         }}
       >
-        <Loader/>
+        <BasicLoader/>
       </div>
     );
   }

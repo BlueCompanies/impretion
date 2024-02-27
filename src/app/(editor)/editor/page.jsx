@@ -10,25 +10,18 @@ export const runtime = 'edge'
 
 const getProductById = async(id) => {
     try {
-      const response = await fetch("https://sa-east-1.aws.data.mongodb-api.com/app/data-lqpho/endpoint/data/v1/action/findOne", {
+      const response = await fetch(`https://sa-east-1.aws.data.mongodb-api.com/app/data-lqpho/endpoint/findOneProduct?ms=${Date.now()}`, {
         method:"POST",
         headers: {
           "Content-Type":"application/json", 
-          "Access-Control-Request-Headers":"*", 
-          "api-key":"s5lWj1OL7r578NX3d8dcJ6TOfNrTPjQp3gfzWdF0trpmQEOX1z7DStx8eCwk7SfG"
+          "Access-Control-Request-Headers":"*",
         },
-        body:JSON.stringify({
-          "collection": "products",
-          "database": "impretion",
-          "dataSource": "Impretion",
-          "filter": {
-            "_id": { "$oid": id }
-          }
+        body:JSON.stringify({id})
       })
-      })
-    
       const data = await response.json()
-      return {product:data.document}
+
+      console.log(data)
+      return {product:data}
     } catch (error) {
       console.log("Error: ", error)
     }
@@ -37,10 +30,10 @@ const getProductById = async(id) => {
 export default async function Editor({searchParams}){
     const {productId} = searchParams
     const {product} = await getProductById(productId)
-
+    console.log("CC: ", product)
     return (
         <>
-        {product && 
+        {product !== undefined && 
             <div className={styles.container}>
                 <Header productId={productId} productName={product.name} editor={product.editor} />
 

@@ -15,8 +15,6 @@ import Image from "next/image";
 import awsS3 from "@/app/_lib/aws";
 import GenericLoader from "@/app/_components/Loaders/MockupGeneratedLoader";
 
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-
 export default function ProductDesign({ product, children }) {
   const workflowRef = useRef(null); // Add a ref for the workflow div
   const [loading, setLoading] = useState(false);

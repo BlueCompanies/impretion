@@ -14,11 +14,11 @@ const getProductById = async(id) => {
       headers: {
         "Content-Type":"application/json", 
         "Access-Control-Request-Headers":"*",
-        "api-key":"whjpCeUWt742aOGp9BylH0dEzh0fcXMNeK3WJCDO5q7kZ6HDrrQyw6jTyboocJtc"
       },
       body:JSON.stringify({id})
     })
     const data = await response.json()
+    console.log(data)
     return {product:data}
   } catch (error) {
     console.log("Error: ", error)
