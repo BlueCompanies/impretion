@@ -469,7 +469,7 @@ function BuyModalWindow({ currentProduct }) {
     setOrderLoading(true);
     const generatedId = uuidv4();
     const signature = md5(
-      `4Vj8eK4rloUd272L48hsrarnUA~508029~${generatedId}~${
+      `38Jt0pGMMwL1cz6X03LIlb845Y~995979~${generatedId}~${
         selectedDelivery.basePrice
           ? productTotal + selectedDelivery.basePrice
           : productTotal

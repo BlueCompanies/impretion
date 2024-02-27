@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./styles.module.css";
 import colombiaStates from "@/app/_lib/colombiaStates";
+import BasicLoader from "@/app/_components/Loaders/Loader";
 
 export default function CashOnDelivery(props) {
   const {
@@ -39,7 +40,34 @@ export default function CashOnDelivery(props) {
 
   return (
     <>
-      {orderLoading && <p>CARGANDO....</p>}
+      {orderLoading && (
+        <div>
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              zIndex: 999,
+            }}
+          ></div>
+          <div
+            style={{
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              color: "white",
+              fontSize: "24px",
+              zIndex: 1000,
+            }}
+          >
+            <BasicLoader />
+          </div>
+        </div>
+      )}
       <div className={styles.bodySection}>
         <div
           style={{
@@ -505,7 +533,11 @@ export default function CashOnDelivery(props) {
             <input name="accountId" type="hidden" value="1004552" />
             <input name="taxReturnBase" value="0" type="hidden"></input>
             <input name="tax" value="0" type="hidden"></input>
-            <input name="description" type="hidden" value={keys.uuid || ""} />
+            <input
+              name="description"
+              type="hidden"
+              value={`${productQuantity}x ${productName}` || ""}
+            />
             <input name="referenceCode" type="hidden" value={keys.uuid || ""} />
             <input name="amount" type="hidden" value={productTotal || ""} />
             <input name="currency" type="hidden" value="COP" />
