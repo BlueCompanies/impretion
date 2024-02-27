@@ -62,6 +62,29 @@
     margin-top: auto;
   }
 
+  .stepsContainer{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+
+  .imageContainer {
+    max-width: 100%;
+  }
+  
+  @media screen and (max-width: 700px) {
+    .imageContainer {
+      max-width: 80%; /* Adjust this value as needed */
+    }
+  
+    .imageContainer img {
+      width: 100%;
+      height: auto;
+    }
+  }
 
   /* Poner las media queries para adaptar la presentacion principal */
   @media (max-width: 1500px) {

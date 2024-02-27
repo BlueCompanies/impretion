@@ -79,7 +79,6 @@
 .gridContainer {
   padding: 5px;
   width: 100%;
-  margin: 100px auto;
 }
 
 .grid {
@@ -135,9 +134,10 @@
 
 }
 
-.imageContainer{
+.imageContainer {
   height: 100%;
-  width: 100px;
+  min-width: 100px; /* Set a minimum width for the container */
+  flex-shrink: 0; /* Prevent the container from shrinking */
   display: flex;
   justify-content: center;
   flex-direction: column;

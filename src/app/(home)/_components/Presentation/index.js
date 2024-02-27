@@ -21,6 +21,7 @@ export default function Presentation() {
             display: "flex",
             width: "100%",
             marginTop: "0px",
+            flexWrap: "wrap",
           }}
         >
           <div
@@ -88,10 +89,10 @@ export default function Presentation() {
               />
             </button>
           </div>
-          <div>
+          <div className={styles.imageContainer}>
             <Image
               src="home/presentation-opt.svg"
-              style={{ margin: "10px", objectFit: "cover" }}
+              style={{ margin: "10px", objectFit: "contain" }}
               width={650}
               height={650}
               placeholder="blur"
@@ -112,7 +113,9 @@ export default function Presentation() {
         }}
       >
         <section className={styles.secondSection}>
-          <div style={{ display: "flex", flexDirection: "row" }}>
+          <div
+            style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+          >
             <div className={styles.target}>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <img src="home/icons/easy-to-use.svg"></img>
@@ -150,7 +153,9 @@ export default function Presentation() {
             </div>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "row" }}>
+          <div
+            style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+          >
             <div className={styles.target}>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <img src="home/icons/superior-quality.svg"></img>
@@ -221,15 +226,7 @@ export default function Presentation() {
             ¡Es tan fácil como dar unos cuantos clics!
           </p>
         </div>
-        <div
-          style={{
-            height: "500px",
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <div className={styles.stepsContainer}>
           <Reveal
             styles={{ height: "500px", display: "flex", alignItems: "center" }}
           >
