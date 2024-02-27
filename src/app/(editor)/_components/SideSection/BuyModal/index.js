@@ -119,7 +119,6 @@ function BuyModalWindow({ currentProduct }) {
     if (currentProduct) {
       try {
         const parsedProduct = JSON.parse(currentProduct);
-        console.log("parsed P: ", parsedProduct);
         setProduct(parsedProduct);
       } catch (error) {
         console.error("Error parsing currentProduct:", error);
@@ -406,7 +405,6 @@ function BuyModalWindow({ currentProduct }) {
       // Set the packageBox state to the new array
       setPackageBox(newPackageBox);
       setPriceWithDiscount(price);
-      console.log(priceWithDiscount);
     }
   }, [productQuantity]);
 
@@ -495,6 +493,9 @@ function BuyModalWindow({ currentProduct }) {
 
         const dataUrl = await toPng(node, {
           cacheBust: true,
+          canvasWidth: product?.editor?.sides[sideIndex]?.width,
+          canvasHeight: product?.editor?.sides[sideIndex]?.height,
+          pixelRatio: 1,
         });
 
         const imageBuffer = Buffer.from(
@@ -509,8 +510,8 @@ function BuyModalWindow({ currentProduct }) {
         });
 
         await awsS3().send(command);
+        const rawImageUrl = `https://xyzstorage.store/orders/unprocessed-orders/order-${generatedId}/raw-image-${rawImageId}.png`;
 
-        const rawImageUrl = `https://xyzstorage.store/impretion/orders/unprocessed-orders/order-${generatedId}/raw-image-${rawImageId}.png`;
         rawImageUrls.push({
           mockupImage: rawImageUrl,
           sideType: totalRawImageSides[currentIndex]?.sideType,
@@ -526,12 +527,32 @@ function BuyModalWindow({ currentProduct }) {
     // Start processing images
     await processImagesSequentially();
 
+    // process order time Colombian easy-to-read format
+    const currentDate = new Date();
+    const options = {
+      timeZone: "America/Bogota",
+      hour12: true,
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+    };
+    const colombianTime = currentDate.toLocaleString("es-CO", options);
+
+    // ISO format
+    const ISOFormatCurrentDate = new Date();
+    const isoDate = ISOFormatCurrentDate.toISOString();
+
     try {
       setFormState(true);
       const response = await fetch("/api/orders/normal-order/process", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          paidOrder: false,
           productQuantity: productQuantity,
           productName: product.name,
           productId: product._id,
@@ -547,6 +568,10 @@ function BuyModalWindow({ currentProduct }) {
             basePrice: product?.productData?.prices?.basePrice,
             discountedPrice: priceWithDiscount,
             percentageDiscounted: discountPercentage,
+          },
+          orderTime: {
+            colombianTime,
+            isoDate,
           },
         }),
       });

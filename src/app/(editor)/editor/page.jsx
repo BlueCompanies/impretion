@@ -28,7 +28,6 @@ const getProductById = async(id) => {
       })
     
       const data = await response.json()
-      console.log("DEITA: ", data)
       return {product:data.document}
     } catch (error) {
       console.log("Error: ", error)
@@ -38,7 +37,7 @@ const getProductById = async(id) => {
 export default async function Editor({searchParams}){
     const {productId} = searchParams
     const {product} = await getProductById(productId)
-    console.log("pradact: ", product)
+
     return (
         <>
         {product && 

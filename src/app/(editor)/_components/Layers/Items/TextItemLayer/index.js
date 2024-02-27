@@ -60,7 +60,6 @@ export default function TextItemLayer({
   };
 
   const handleChangeTextColor = (newTextColor) => {
-    console.log("as");
     useStoreItems
       .getState()
       .setNewTextProperties({ newTextColor }, sideIndex, textId);

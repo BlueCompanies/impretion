@@ -10,6 +10,7 @@ import {
 } from "@/app/_store";
 import GenericLoader from "@/app/_components/Loaders/MockupGeneratedLoader";
 import BuyModalWindow from "./BuyModal";
+import { BiSolidDownload } from "react-icons/bi";
 
 export default function SideSection({ product }) {
   const isPreviewing = usePreviewMode((state) => state.isPreviewing);
@@ -80,6 +81,15 @@ export default function SideSection({ product }) {
     }
   }, [isPreviewing]);
 
+  const handleImageDownload = (imageSrc, imageName) => {
+    const link = document.createElement("a");
+    link.href = imageSrc;
+    link.download = imageName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <>
       <div className={styles.sideSection}>
@@ -87,7 +97,7 @@ export default function SideSection({ product }) {
           <>
             <div className={styles.mockupSection}>
               {generatedMockups.map((mockup, index) => (
-                <div key={index}>
+                <div key={index} style={{ position: "relative" }}>
                   <img
                     src={mockup}
                     alt={`Mockup ${index}`}
@@ -103,6 +113,29 @@ export default function SideSection({ product }) {
                     onClick={() => currentSelectedImage(mockup)}
                     onLoad={() => handleImageLoad(index)} // Handle image load event
                   />
+                  <button
+                    style={{
+                      position: "absolute",
+                      fontSize: "35px",
+                      padding: "5px",
+                      top: 0,
+                      backgroundColor: "rgba(0, 0, 0, 0.5)",
+                      margin: "5px",
+                      borderRadius: "6px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      outline: "none",
+                      border: "none",
+                    }}
+                    onClick={() =>
+                      handleImageDownload(mockup, `Mockup #${index}`)
+                    }
+                  >
+                    <BiSolidDownload
+                      style={{ color: "#fff", cursor: "pointer" }}
+                    />
+                  </button>
                 </div>
               ))}
               {/* The loaders templates */}
@@ -172,16 +205,6 @@ export default function SideSection({ product }) {
                   </div>
                 )}
                 <BuyModalWindow currentProduct={product} />
-              </div>
-
-              <div className={styles.payuMsg}>
-                <hr />
-                <span
-                  style={{ marginTop: "5px", fontSize: "10px", color: "#333" }}
-                >
-                  Utilizamos PayU como metodo de pago para que tu compra sea
-                  segura.
-                </span>
               </div>
             </div>
           </>

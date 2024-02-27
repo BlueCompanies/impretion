@@ -144,7 +144,6 @@ export default function Layers() {
   };
 
   const deleteLayerHandler = (index) => {
-    console.log("ind: ", index);
     // Get the id of the item to be deleted
     const itemId = layers[sideIndex].data[index].id;
     // Call the deleteLayer action to delete the item by id
@@ -235,7 +234,6 @@ export default function Layers() {
                           isDragging === index ? styles.dragging : ""
                         }`}
                       >
-                        {console.log("mierda: ", item)}
                         {item?.inputType === "text" && (
                           <TextItemLayer
                             textFamily={item.textFamily}

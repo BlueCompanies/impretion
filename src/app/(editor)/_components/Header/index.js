@@ -2,7 +2,11 @@
 
 import Link from "next/link";
 import styles from "./styles.module.css";
-import { usePreviewMode, useStoreItems } from "@/app/_store";
+import {
+  useGeneratedMockups,
+  usePreviewMode,
+  useStoreItems,
+} from "@/app/_store";
 import {
   BsBoxArrowLeft,
   BsArrowLeftShort,
@@ -18,6 +22,11 @@ export default function Header({ productId, productName, editor }) {
   const changeIndex = useStoreItems((state) => state.setSideIndex);
   const sideIndex = useStoreItems((state) => state.sideIndex);
   const layers = useStoreItems((state) => state.layerItems);
+
+  const generatedMockups = useGeneratedMockups((state) => state.mockups);
+  const generatedMockupsLength = useGeneratedMockups(
+    (state) => state.mockupsLength
+  );
 
   const previewMode = () => {
     // Switch between true or false the preview mode
@@ -35,7 +44,7 @@ export default function Header({ productId, productName, editor }) {
   return (
     <>
       <div className={styles.header}>
-        {isPreviewing && (
+        {isPreviewing && generatedMockups.length === generatedMockupsLength && (
           <button className={styles.outOfPreviewBtn} onClick={closePreview}>
             <AiOutlineArrowLeft />
             Salir de la previsualización
@@ -51,7 +60,7 @@ export default function Header({ productId, productName, editor }) {
             visibility: isPreviewing ? "hidden" : "",
           }}
         >
-          <ConfirmLink layersLength={layers.length} productId={productId}>
+          <ConfirmLink productId={productId}>
             <div
               style={{
                 display: "flex",
@@ -144,26 +153,9 @@ export default function Header({ productId, productName, editor }) {
   );
 }
 
-export const ConfirmLink = ({ layersLength, productId, children }) => {
-  const router = useRouter();
-
+export const ConfirmLink = ({ productId, children }) => {
   const leaveHandler = (e) => {
-    if (layersLength > 0) {
-      if (
-        window.confirm(
-          "Hay cambios sin guardar. ¿Seguro que quieres salir del editor?"
-        )
-      ) {
-        // User accepted, navigate to /product/${productId}
-        router.push(`/product/${productId}`);
-      } else {
-        // User canceled, stay on the current page
-        e.preventDefault();
-      }
-    } else {
-      // No unsaved changes, navigate to /product/${productId}
-      router.push(`/product/${productId}`);
-    }
+    window.location.href = `/product/${productId}`;
   };
 
   return (

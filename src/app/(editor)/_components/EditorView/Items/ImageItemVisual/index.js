@@ -27,8 +27,6 @@ export default function ImageItemVisual({
     }
   }, [workflowSize]);
 
-  console.log(item);
-
   return (
     <img
       className="target"

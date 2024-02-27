@@ -12,7 +12,6 @@
   .designItem {
     width: 100px;
     height: 100px;
-    flex-shrink: 0;
     border: 1px solid #e2e2e2;
     border-radius: 4px;
     cursor: pointer;

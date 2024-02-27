@@ -20,6 +20,7 @@ export default function CashOnDelivery(props) {
     productQuantityChange,
     orderID,
     shipmentData,
+    orderLoading,
   } = props;
   const [userDeliveryData, setUserDeliveryData] = useState({
     address: "",
@@ -35,12 +36,10 @@ export default function CashOnDelivery(props) {
       [e.target.name]: e.target.value,
     });
   };
-  useEffect(() => {
-    console.log(discounts);
-  }, [discounts]);
 
   return (
     <>
+      {orderLoading && <p>CARGANDO....</p>}
       <div className={styles.bodySection}>
         <div
           style={{
@@ -500,10 +499,10 @@ export default function CashOnDelivery(props) {
             onSubmit={(e) => newOrder(e, userDeliveryData)}
             ref={formRef}
             method="post"
-            action="https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu"
+            action="https://checkout.payulatam.com/ppp-web-gateway-payu/"
           >
-            <input name="merchantId" type="hidden" value="508029" />
-            <input name="accountId" type="hidden" value="512321" />
+            <input name="merchantId" type="hidden" value="995979" />
+            <input name="accountId" type="hidden" value="1004552" />
             <input name="taxReturnBase" value="0" type="hidden"></input>
             <input name="tax" value="0" type="hidden"></input>
             <input name="description" type="hidden" value={keys.uuid || ""} />
@@ -562,12 +561,12 @@ export default function CashOnDelivery(props) {
             <input
               name="responseUrl"
               type="hidden"
-              value="http://localhost:3000/orders/order-response"
+              value="https://impretion.com/orders/normal-order-response"
             />
             <input
               name="confirmationUrl"
               type="hidden"
-              value="https://nine-stars-warn.loca.lt/api/orders/normal-order/confirmation"
+              value="https://impretion.com/api/orders/normal-order/confirmation"
             />
 
             <div

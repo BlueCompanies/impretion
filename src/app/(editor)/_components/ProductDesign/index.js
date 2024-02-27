@@ -124,6 +124,9 @@ export default function ProductDesign({ product, children }) {
           setTimeout(async () => {
             const dataUrl = await toPng(workflowRef?.current, {
               cacheBust: true,
+              canvasWidth: product?.editor?.sides[sideIndex]?.width,
+              canvasHeight: product?.editor?.sides[sideIndex]?.height,
+              pixelRatio: 1,
             });
             const imageBuffer = Buffer.from(
               dataUrl.replace(/^data:image\/\w+;base64,/, ""),
@@ -153,7 +156,7 @@ export default function ProductDesign({ product, children }) {
     };
 
     if (isPreviewing) previewMode();
-  }, [isPreviewing, sideIndex, generatedMockups]);
+  }, [isPreviewing, sideIndex, generatedMockups]); // Execute useEffect only when isPreviewing or sideIndex changes
 
   useEffect(() => {
     if (!isPreviewing) {
@@ -245,7 +248,7 @@ export default function ProductDesign({ product, children }) {
           wnd.postMessage(scripts[scriptIndex], "*"); // Execute the current script
           setTimeout(
             () => executeNextScript(scriptIndex + 1, callback),
-            scriptIndex === 1 ? 1500 : 100
+            scriptIndex === 1 ? 2000 : 200
           ); // Schedule the next script after a delay
         };
 
@@ -561,7 +564,7 @@ export default function ProductDesign({ product, children }) {
               product?.editor?.sides[sideIndex]?.height / divisorNumber
             }px`,
             backgroundColor: "#fff",
-            overflow: "hidden", // Hide content that overflows the container
+            overflow: isPreviewing ? "visible" : "hidden", // Hide content that overflows the container except when user is in previewmode
           }}
         >
           {isPreviewing && (
@@ -574,22 +577,29 @@ export default function ProductDesign({ product, children }) {
                       top: "50%",
                       left: "50%",
                       transform: "translate(-50%, -50%)",
-                      width: "80%", // Use a percentage for width
-                      maxWidth: `${screenWidth * 1}px`, // Dynamically set maxWidth based on screenWidth
-                      height: "80%", // Use a percentage for height
-                      maxHeight: `${screenWidth * 1}px`, // Dynamically set maxHeight based on screenWidth
                       backgroundColor: "#fff",
+                      width: "100%",
+                      height: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      margin: "auto",
                     }}
                   >
                     {currentMockupImage.length > 0 && (
-                      <img
+                      <div
                         style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
+                          height: "auto", // Ensures the image maintains its aspect ratio
                         }}
-                        src={currentMockupImage}
-                      ></img>
+                      >
+                        <img
+                          src={currentMockupImage}
+                          style={{
+                            maxWidth: "100%",
+                            height: "auto",
+                          }}
+                        />
+                      </div>
                     )}
                     {loading && (
                       <div className={styles.loadingContainer}>
@@ -601,7 +611,6 @@ export default function ProductDesign({ product, children }) {
               </div>
             </>
           )}
-
           <div
             className="workflow"
             ref={workflowRef} // Assign the ref to the div
@@ -627,6 +636,7 @@ export default function ProductDesign({ product, children }) {
             height={
               product?.editor?.sides[sideIndex]?.templateHeight / divisorNumber
             }
+            priority={true}
             style={{
               position: "absolute",
               zIndex: "999999",

@@ -8,6 +8,11 @@ import { AiFillFilter } from "react-icons/ai";
 import { BiSolidCategory } from "react-icons/bi";
 import Image from "next/image";
 import BasicLoader from "@/app/_components/Loaders/Loader";
+import {
+  IoIosInformationCircle,
+  IoIosInformationCircleOutline,
+} from "react-icons/io";
+import { MdCollections } from "react-icons/md";
 
 async function getAllDesigns(currentPage) {
   try {
@@ -57,8 +62,12 @@ export default function Designs() {
   const [showCategories, setShowCategories] = useState(false);
   const [categories, setCategories] = useState([]);
   const [filteredPath, setFilteredPath] = useState("");
-
   const [searchLoading, setSearchLoading] = useState(false);
+
+  // Show images info handler
+  const [showDesignInfoIcon, setShowDesignInfoIcon] = useState(null);
+  const [overlay, setOverlay] = useState(false);
+  const [showDesignInfoModal, setShowDesignInfoModal] = useState(null);
 
   const newLayer = useStoreItems((state) => state.setNewLayerItem);
   const newMultipleLayers = useStoreItems(
@@ -123,7 +132,6 @@ export default function Designs() {
 
   const newDesignHandler = (url, name, width, height, d) => {
     const inputId = uuidv4();
-    console.log(width, height);
     newLayer(sideIndex, {
       id: inputId,
       inputType: "design",
@@ -147,30 +155,49 @@ export default function Designs() {
     newMultipleLayers(sideIndex, itemsWithId);
   };
 
-  const handleDesignSearch = async (e) => {
-    e.preventDefault();
-    setSearchLoading(true);
-    const searchValue = e.target[0].value;
-    if (searchValue.length < 3) {
-      setMinSearchLengthError(true);
-      return;
-    }
-    const { response, data } = await searchDesigns(searchValue, e);
-    if (!response.ok) {
-      setError("Hubo un error en el servidor.");
+  const handleDesignSearch = async (e, searchType, value) => {
+    if (searchType === "search") {
+      e.preventDefault();
+      setSearchLoading(true);
+      const searchValue = value;
+      if (searchValue.length < 3) {
+        setMinSearchLengthError(true);
+        return;
+      }
+      const { response, data } = await searchDesigns(searchValue, e);
+      if (!response.ok) {
+        setError("Hubo un error en el servidor.");
+        setSearchLoading(false);
+        return;
+      }
+
+      if (response.status >= 400) {
+        setError("Error interno de la aplicación.");
+        setSearchLoading(false);
+        return;
+      }
+      setDesigns(data); // Use the setDesigns function
+      setShowAllDesigns(false);
+      minSearchLengthError && setMinSearchLengthError(false);
       setSearchLoading(false);
-      return;
     }
 
-    if (response.status >= 400) {
-      setError("Error interno de la aplicación.");
-      setSearchLoading(false);
-      return;
+    if (searchType === "tag") {
+      const { response, data } = await searchDesigns(value, e);
+      if (!response.ok) {
+        setError("Hubo un error en el servidor.");
+        setSearchLoading(false);
+        return;
+      }
+      if (response.status >= 400) {
+        setError("Error interno de la aplicación.");
+        setSearchLoading(false);
+        return;
+      }
+      setFilteredPath(value);
+      setDesigns(data); // Use the setDesigns function
+      setShowAllDesigns(false);
     }
-    setDesigns(data); // Use the setDesigns function
-    setShowAllDesigns(false);
-    minSearchLengthError && setMinSearchLengthError(false);
-    setSearchLoading(false);
   };
 
   const showAllDesignsHandler = async () => {
@@ -321,6 +348,25 @@ export default function Designs() {
               </div>
             </div>
           )}
+          {overlay && (
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust the opacity as needed
+                zIndex: 9999, // Ensure it's above other content
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onClick={() => {
+                setOverlay(false), setShowDesignInfoModal(null);
+              }}
+            ></div>
+          )}
         </div>
 
         <div style={{ margin: "60px 20px 0px 20px" }}>
@@ -330,7 +376,7 @@ export default function Designs() {
               margin: "10px 0px 10px 0px",
               width: "100%",
             }}
-            onSubmit={handleDesignSearch}
+            onSubmit={(e) => handleDesignSearch(e, "search", e.target[0].value)}
           >
             <div
               style={{
@@ -498,34 +544,155 @@ export default function Designs() {
 
             <div className={styles.designsContainer}>
               {designs?.length > 0 ? (
-                designs.map((design) => (
-                  <div
-                    key={design._id}
-                    className={styles.designItem}
-                    onClick={
-                      design.groupedItems === undefined
-                        ? () =>
-                            newDesignHandler(
-                              design.url,
-                              design.type,
-                              design.width,
-                              design.height
-                            )
-                        : () =>
-                            newConstructedDesignsHandler(
-                              design.url,
-                              design.groupedItems
-                            )
-                    }
-                  >
-                    <Image
-                      src={design.url}
-                      alt={design.name}
-                      className={styles.imageItem}
-                      width={100}
-                      height={100}
-                    />
-                  </div>
+                designs.map((design, index) => (
+                  <>
+                    {showDesignInfoModal === index && (
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          transform: "translate(-50%, -50%)",
+                          zIndex: 9999,
+                          backgroundColor: "#FFF",
+                          height: "400px",
+                          width: "300px",
+                          overflow: "auto", // Allow scrolling if content exceeds modal dimensions
+                          borderRadius: "8px",
+                          padding: "16px",
+                        }}
+                      >
+                        {/* Your modal content here */}
+                        <h3
+                          style={{
+                            fontSize: "25px",
+                            fontWeight: 700,
+                            color: "#555555",
+                          }}
+                        >
+                          {design.description}
+                        </h3>
+                        <div
+                          style={{
+                            border: "1px solid #dedede",
+                            width: "100%",
+                            marginTop: "30px",
+                          }}
+                        >
+                          {design?.tags?.split(", ").map((tag) => (
+                            <button
+                              style={{
+                                border: "1px solid #dedede",
+                                display: "inline-block",
+                                margin: "5px",
+                                padding: "4px",
+                                borderRadius: "4px",
+                                cursor: "pointer",
+                              }}
+                              onClick={(e) => {
+                                handleDesignSearch(e, "tag", tag),
+                                  setOverlay(false);
+                                setShowDesignInfoModal(false);
+                              }}
+                            >
+                              {tag}
+                            </button>
+                          ))}
+                        </div>
+                        <hr />
+                        <button
+                          style={{
+                            display: "flex",
+                            height: "35px",
+                            background: "#dedede",
+                            outline: "none",
+                            border: "none",
+                            width: "100%",
+                            justifyContent: "flex-start",
+                            alignItems: "center",
+                            cursor: "pointer",
+                            borderRadius: "4px",
+                          }}
+                        >
+                          <MdCollections
+                            style={{ fontSize: "25px", color: "#555555" }}
+                          />
+                          <span
+                            style={{
+                              fontSize: "20px",
+                              color: "#555555",
+                              marginLeft: "10px",
+                            }}
+                          >
+                            Mirar colección
+                          </span>
+                        </button>
+                        <p style={{ marginTop: "20px", fontSize: 12 }}>
+                          Puedes usar este diseños completamente gratis.
+                        </p>
+                      </div>
+                    )}
+                    <div style={{ position: "relative" }}>
+                      <div
+                        key={design._id}
+                        className={styles.designItem}
+                        onClick={
+                          design.groupedItems === undefined
+                            ? () =>
+                                newDesignHandler(
+                                  design.url,
+                                  design.type,
+                                  design.width,
+                                  design.height
+                                )
+                            : () =>
+                                newConstructedDesignsHandler(
+                                  design.url,
+                                  design.groupedItems
+                                )
+                        }
+                        onMouseEnter={() => setShowDesignInfoIcon(index)}
+                        onMouseLeave={() => setShowDesignInfoIcon(null)}
+                      >
+                        <Image
+                          src={design.url}
+                          alt={design.name}
+                          className={styles.imageItem}
+                          width={100}
+                          height={100}
+                        />
+                      </div>
+                      {showDesignInfoIcon === index && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: 1,
+                            right: 1,
+                            backgroundColor: "#373737",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            borderRadius: "50%",
+                            cursor: "pointer",
+                            opacity: 0.9,
+                            margin: "3px",
+                          }}
+                          onClick={() => {
+                            setShowDesignInfoModal(index), setOverlay(true);
+                          }}
+                          onMouseEnter={() => setShowDesignInfoIcon(index)}
+                          onMouseLeave={() => setShowDesignInfoIcon(null)}
+                        >
+                          <IoIosInformationCircleOutline
+                            style={{
+                              fontSize: "30px",
+                              color: "#fff",
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </>
                 ))
               ) : (
                 <>

@@ -7,26 +7,19 @@ import { ImagesScroll, TableMeasures } from "./_components/TableMeasures";
 export const runtime = 'edge'
 
 const getProductById = async(id) => {
+  console.log(id)
   try {
-    const response = await fetch("https://sa-east-1.aws.data.mongodb-api.com/app/data-lqpho/endpoint/data/v1/action/findOne", {
+    const response = await fetch(`https://sa-east-1.aws.data.mongodb-api.com/app/data-lqpho/endpoint/findOneProduct?ms=${Date.now()}`, {
       method:"POST",
       headers: {
         "Content-Type":"application/json", 
-        "Access-Control-Request-Headers":"*", 
-        "api-key":"s5lWj1OL7r578NX3d8dcJ6TOfNrTPjQp3gfzWdF0trpmQEOX1z7DStx8eCwk7SfG"
+        "Access-Control-Request-Headers":"*",
+        "api-key":"whjpCeUWt742aOGp9BylH0dEzh0fcXMNeK3WJCDO5q7kZ6HDrrQyw6jTyboocJtc"
       },
-      body:JSON.stringify({
-        "collection": "products",
-        "database": "impretion",
-        "dataSource": "Impretion",
-        "filter": {
-          "_id": { "$oid": id }
-        }
-      })
+      body:JSON.stringify({id})
     })
     const data = await response.json()
-    console.log("didi: ", data)
-    return {product:data.document}
+    return {product:data}
   } catch (error) {
     console.log("Error: ", error)
   }

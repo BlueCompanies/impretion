@@ -2,6 +2,7 @@ import Link from "next/link";
 import styles from "./styles.module.css";
 import { getProducts } from "@/app/_lib/productQueries";
 import connectDB from "@/app/_lib/connectDB";
+import Image from "next/image";
 
 export default async function ProductsList() {
   await connectDB();
@@ -13,17 +14,21 @@ export default async function ProductsList() {
         products.map((product) => (
           <div key={product._id} className={styles.product}>
             <Link href={`/product/${product._id}`}>
-              <div className={styles.mousepad}>
+              <div className={styles.productInteraction}>
                 <div className={styles.imageContainer}>
                   <img
                     className={styles.originalImg}
+                    width={250}
+                    height={280}
                     src={`${product?.files?.principalImages?.normal}`}
-                    alt="Mousepad"
+                    alt={product.name}
                   />
                   <img
                     className={styles.designedImg}
+                    width={250}
+                    height={280}
                     src={`${product?.files?.principalImages?.over}`}
-                    alt="Mousepad Hover"
+                    alt={(product.name, "hover")}
                   />
                 </div>
                 <div>

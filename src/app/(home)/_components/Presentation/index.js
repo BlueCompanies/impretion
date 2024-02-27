@@ -90,10 +90,14 @@ export default function Presentation() {
           </div>
           <div>
             <Image
-              src="home/presentation.svg"
+              src="home/presentation-opt.svg"
               style={{ margin: "10px", objectFit: "cover" }}
               width={650}
               height={650}
+              placeholder="blur"
+              priority={true}
+              quality={80}
+              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAK5QTFRF6Oz/9ff/////ydXfsLfBxNDc/v//o7vKrbnDzNTe/v7/o6izn7fKzc7P78vb+Ojv//7/0a6/pYaN5b7I8L7O+eLp78HMyJ+U9svZzpiYwNfmzayv9MvK793c6unp4N/e7+7t58jQzt3j07Kx/++r0MqqvLq4OTk2n5yY5+Le2MzAva2fysSkmrTEaoCLcXFuxtvnq8nbj5ygzcWmeYyXSlpiUFBPv9LcqMHPipWZ61y5CwAAAGFJREFUeJxjYGBgYGRiYmJmYWWAMNnYOTihTC5uHl4GPj4+fiYmAUEhYQYRERFRoFoxcQkoU0BSSppBRkZGVk5eQVFJmUFFRUVVTV1DU0sbxNTR1dM3MDQCMY1NTM3MLSwBDKoIj4TdjPkAAAAASUVORK5CYII="
             ></Image>
           </div>
         </div>
@@ -238,9 +242,11 @@ export default function Presentation() {
                 quieras tener.
               </p>
               <div className={styles.cardImageContainer}>
-                <img
+                <Image
                   src="home/icons/product-select.svg"
-                  style={{ width: "150px" }}
+                  width={150}
+                  height={150}
+                  quality={60}
                   className={styles.cardImage}
                 />
               </div>
@@ -259,11 +265,13 @@ export default function Presentation() {
                 personalizables.
               </p>
               <div className={styles.cardImageContainer}>
-                <img
+                <Image
                   src="home/icons/product-editor.svg"
-                  style={{ width: "150px" }}
+                  width={150}
+                  height={150}
+                  quality={60}
                   className={styles.cardImage}
-                ></img>
+                />
               </div>
             </div>
           </Reveal>
@@ -282,10 +290,13 @@ export default function Presentation() {
               </p>
 
               <div className={styles.cardImageContainer}>
-                <img
+                <Image
                   src="home/icons/product-mockup.svg"
-                  style={{ width: "150px" }}
-                ></img>
+                  width={150}
+                  height={150}
+                  quality={60}
+                  className={styles.cardImage}
+                />
               </div>
             </div>
           </Reveal>
@@ -303,10 +314,13 @@ export default function Presentation() {
                 es crear productos con tu marca con Impretion.
               </p>
               <div className={styles.cardImageContainer}>
-                <img
+                <Image
                   src="home/icons/product-delivery.svg"
-                  style={{ width: "150px" }}
-                ></img>
+                  width={150}
+                  height={150}
+                  quality={60}
+                  className={styles.cardImage}
+                />
               </div>
             </div>
           </Reveal>
