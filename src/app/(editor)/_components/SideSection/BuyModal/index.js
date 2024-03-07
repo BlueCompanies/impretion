@@ -665,7 +665,7 @@ function BuyModalWindow({ currentProduct }) {
         </>
       )}
 
-      <button className={styles.buyBtn} onClick={modalHandler}>
+      <button className={styles.buyBtn} onClick={modalHandler} disabled={true}>
         <BsFillCartFill
           style={{ width: "20px", height: "20px", marginRight: "5px" }}
         />
