@@ -3,7 +3,7 @@ import Product from "../_models/Product";
 // Get all products in pryntart (database) > products (collection).
 export async function getProducts() {
   try {
-    const result = await Product.find({});
+    const result = await Product.find({}).sort({ _id: -1 }); // Sorting by _id in descending order
 
     return result;
   } catch (error) {

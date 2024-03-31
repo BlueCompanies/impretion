@@ -117,13 +117,15 @@ export default function ProductDesign({ product, children }) {
 
       if (sideIndex < product.editor.sides.length) {
         const imgId = uuidv4();
-
+        console.log(product?.editor?.sides[sideIndex]?.originalSize?.width);
         try {
           setTimeout(async () => {
             const dataUrl = await toPng(workflowRef?.current, {
               cacheBust: true,
-              canvasWidth: product?.editor?.sides[sideIndex]?.width,
-              canvasHeight: product?.editor?.sides[sideIndex]?.height,
+              canvasWidth:
+                product?.editor?.sides[sideIndex]?.originalSize?.width?.pixels,
+              canvasHeight:
+                product?.editor?.sides[sideIndex]?.originalSize?.height?.pixels,
               pixelRatio: 1,
             });
             const imageBuffer = Buffer.from(

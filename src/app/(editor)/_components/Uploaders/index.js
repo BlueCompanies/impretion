@@ -56,13 +56,10 @@ export default function Uploaders() {
     }
 
     if (file && file.type.startsWith("image/")) {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      // Double checks if the image is truly a valid image with a buffer array validation.
-
       const reader = new FileReader();
+
       const inputId = uuidv4();
+      console.log(reader);
       reader.onload = () => {
         newLayer(sideIndex, {
           id: inputId,
@@ -136,7 +133,11 @@ export default function Uploaders() {
                 <span style={{ marginLeft: "5px" }}>Agregar texto</span>
               </button>
 
-              <button className={styles.addDesign} onClick={newDesignHandler}>
+              <button
+                className={styles.addDesign}
+                onClick={newDesignHandler}
+                style={{ display: "none" }}
+              >
                 <BsFillPencilFill style={{ width: "20px", height: "20px" }} />
                 <span>Agregar diseño</span>
                 <BsFillStarFill
@@ -174,6 +175,7 @@ export default function Uploaders() {
                   <button
                     className={styles.addDesign}
                     onClick={newDesignHandler}
+                    style={{ display: "none" }}
                   >
                     <BsFillPencilFill
                       style={{ width: "20px", height: "20px" }}
@@ -202,4 +204,23 @@ export default function Uploaders() {
       )}
     </>
   );
+}
+
+function base64ToBlob(base64, contentType) {
+  const byteCharacters = atob(base64);
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+    const slice = byteCharacters.slice(offset, offset + 512);
+
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+
+  return new Blob(byteArrays, { type: contentType });
 }

@@ -8,7 +8,6 @@ export async function POST(request) {
 
     // Check if the request body is valid JSON
     const requestBody = await request.json();
-    console.log(requestBody);
 
     // api-key: hfK5LsRQypj3FrNYsxov6bQ4b8bako1iW9AC7hNCUCntjkklUejVzV9SAZndWSD2
     // secret: 56GHTY1364781F281ZZ9E27W9B5F62M293X4

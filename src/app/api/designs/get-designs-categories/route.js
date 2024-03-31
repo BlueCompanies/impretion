@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 export const runtime = "edge";
 
 export async function GET(request) {
-  console.log("ptm");
   try {
     const response = await fetch(
       `https://sa-east-1.aws.data.mongodb-api.com/app/data-lqpho/endpoint/getDesignsCategories?ms=${Date.now()}`,
@@ -20,7 +19,6 @@ export async function GET(request) {
     );
     if (response.status === 200) {
       const data = await response.json();
-      console.log(data);
       return NextResponse.json(data, { status: 200 });
     } else {
       return NextResponse.json({}, { status: 404 });

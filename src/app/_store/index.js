@@ -8,7 +8,6 @@ export const useStoreItems = create((set) => ({
   // Action to set new text properties (including textContent)
   setNewTextProperties: (newProperties, sideIndex, textId) =>
     set((state) => {
-      console.log(newProperties);
       return {
         layerItems: state.layerItems.map((item) => {
           if (item.id === sideIndex) {
@@ -24,7 +23,6 @@ export const useStoreItems = create((set) => ({
                 }
                 switch (true) {
                   case !!newProperties.newTextColor:
-                    console.log("xd: ", newProperties.newTextColor);
                     return {
                       ...dataItem,
                       textColor: newProperties.newTextColor,

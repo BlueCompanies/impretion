@@ -11,9 +11,6 @@ export async function POST(request) {
     // ID to target the desired order
     const parsedData = await JSON.parse(jsonData);
     const orderReference = parsedData.extra1;
-
-    console.log(parsedData);
-    console.log(orderReference);
     //secret: A3337ZI7WNMMGHL6YUBCY1D2JKL1ZZZAB824WDD
     //api-key: thsmZ3xh3TEfRbiuBrw1rjcsnQnMp5rCIbM6Phz0BOcVPz8ML0ILEBhxKNaDrR47
     try {

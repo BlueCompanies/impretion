@@ -18,7 +18,6 @@ const getProductById = async(id) => {
       body:JSON.stringify({id})
     })
     const data = await response.json()
-    console.log(data)
     return {product:data}
   } catch (error) {
     console.log("Error: ", error)

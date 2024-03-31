@@ -5,7 +5,7 @@ import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 // image field is for custom and diferent image fields that are into the objects
 const ImageCarousel = ({ imageArray, imageField, styles }) => {
   const [sliderIndex, setSliderIndex] = useState(0);
-  console.log(imageArray);
+
   const nextImage = () => {
     setSliderIndex((sliderIndex + 1) % imageArray.length);
   };
@@ -13,10 +13,6 @@ const ImageCarousel = ({ imageArray, imageField, styles }) => {
   const prevImage = () => {
     setSliderIndex((sliderIndex - 1 + imageArray.length) % imageArray.length);
   };
-
-  useEffect(() => {
-    console.log(imageArray);
-  }, [imageArray]);
 
   return (
     <div

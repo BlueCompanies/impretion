@@ -27,7 +27,6 @@ export async function POST(request) {
 
     if (response.status === 200) {
       const data = await response.json();
-      console.log(data);
       return NextResponse.json(data, { status: 200 });
     } else {
       return NextResponse.json({}, { status: 404 });
