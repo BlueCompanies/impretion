@@ -1,16 +1,17 @@
-import styles from "./page.module.css";
-import { GiColombia } from "react-icons/gi";
-import { BsFillBrushFill } from "react-icons/bs";
-import { AiFillShop } from "react-icons/ai";
+import styles from "./styles.module.css";
 import ProductsList from "./_components/ProductsList";
 import MainHeader from "../_components/Layouts/Header";
 import Presentation from "./_components/Presentation";
+import ReferLinkProccessing from "./_components/ReferLinkProccessing";
 //import LookProductsButton from "./_components/HomePage/LookProductsButton";
 
 export default async function Home() {
+ 
   return (
     <>
+    <ReferLinkProccessing/>
     <MainHeader  />
+  
     <div style={{ background: '#e6e6e6', height: '90px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflowX: 'auto', overflowY:"hidden" }}>
       <div className={styles.imageContainer}>
         <img src="/home/icons/category-1.svg" className={styles.imageCategory} alt="Category 1"></img>
@@ -43,7 +44,7 @@ export default async function Home() {
         </div>
       </div>
       </div>
-    
+
     </>
   );
 }

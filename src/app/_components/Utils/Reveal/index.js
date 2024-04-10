@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 
 export default function Reveal({ children, styles }) {
-  console.log(styles);
   return (
     <>
       <motion.div

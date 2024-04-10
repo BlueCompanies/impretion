@@ -1,3 +1,4 @@
+/*
 import mongoose, { model, models, Schema } from "mongoose";
 
 const OrderSchema = new Schema(
@@ -19,3 +20,4 @@ const OrderSchema = new Schema(
 
 const Order = models.Order || model("Order", OrderSchema);
 export default Order;
+ */

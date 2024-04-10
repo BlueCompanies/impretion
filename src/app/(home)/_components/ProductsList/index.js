@@ -1,12 +1,31 @@
 import Link from "next/link";
 import styles from "./styles.module.css";
-import { getProducts } from "@/app/_lib/productQueries";
-import connectDB from "@/app/_lib/connectDB";
+//import { getProducts } from "@/app/_lib/productQueries";
 import Image from "next/image";
 
 export default async function ProductsList() {
-  await connectDB();
-  const products = await getProducts();
+  //await connectDB();
+  //const products = await getProducts();
+  const response = await fetch(
+    "https://sa-east-1.aws.data.mongodb-api.com/app/data-lqpho/endpoint/data/v1/action/find",
+    {
+      method: "POST",
+      headers: {
+        apiKey:
+          "QT2geF4wxDICjLat2tdnzYO65xUXz9P9uLPxkBjFud9haIt9qGT2fynwZCAR7Pj0",
+        contentType: "application/json",
+      },
+      body: JSON.stringify({
+        dataSource: "Impretion",
+        database: "impretion",
+        collection: "products",
+      }),
+    }
+  );
+
+  const data = await response.json();
+  const { documents } = data;
+  const products = documents;
 
   return (
     <>

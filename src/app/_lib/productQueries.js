@@ -1,6 +1,8 @@
-import Product from "../_models/Product";
+//import Product from "../_models/Product";
 
 // Get all products in pryntart (database) > products (collection).
+
+/*
 export async function getProducts() {
   try {
     const result = await Product.find({}).sort({ _id: -1 }); // Sorting by _id in descending order
@@ -10,6 +12,7 @@ export async function getProducts() {
     return { error: "Failed to fetch products." };
   }
 }
+
 
 export async function queryProducts(searchParam) {
   try {
@@ -54,3 +57,5 @@ export async function getProductById(id) {
     return { error: `Failed to fetch product with id ${id}` };
   }
 }
+
+*/

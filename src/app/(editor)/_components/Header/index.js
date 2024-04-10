@@ -94,23 +94,21 @@ export default function Header({ productId, productName, editor }) {
               }}
             >
               {editor.sides.map((side, index) => (
-                <>
-                  <button
-                    key={index}
-                    onClick={() => changeSideIndex(index)}
-                    className={`${
-                      index === 0
-                        ? styles.firstBtn
-                        : index === editor.sides.length - 1
-                        ? styles.lastBtn
-                        : styles.middleBtn
-                    }
+                <button
+                  key={index}
+                  onClick={() => changeSideIndex(index)}
+                  className={`${
+                    index === 0
+                      ? styles.firstBtn
+                      : index === editor.sides.length - 1
+                      ? styles.lastBtn
+                      : styles.middleBtn
+                  }
                     ${index === sideIndex && styles.activeBtn}
                     `} // Add the 'button' class to all buttons
-                  >
-                    {side?.sideTypeES}
-                  </button>
-                </>
+                >
+                  {side?.sideTypeES}
+                </button>
               ))}
             </div>
           )}

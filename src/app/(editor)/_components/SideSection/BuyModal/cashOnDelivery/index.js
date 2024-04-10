@@ -498,6 +498,28 @@ export default function CashOnDelivery(props) {
               </span>
             </div>
 
+            <div className={styles.properties}>
+              <span
+                style={{
+                  background: "#e2e2e2",
+                  padding: "4px",
+                  color: "#333",
+                  width: "200px",
+                }}
+              >
+                Codigo de descuento
+              </span>
+              <span
+                style={{
+                  margin: "0px 2px 0px 4px",
+                  color: "#000",
+                  fontWeight: 700,
+                }}
+              >
+                asdf
+              </span>
+            </div>
+
             {discountPercentage > 0 && (
               <div
                 style={{

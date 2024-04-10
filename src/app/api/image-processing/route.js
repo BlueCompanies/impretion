@@ -1,3 +1,4 @@
+/*
 import { NextResponse } from "next/server";
 import sharp from "sharp"; // Import sharp library
 
@@ -36,3 +37,4 @@ export async function POST(request) {
     );
   }
 }
+ */

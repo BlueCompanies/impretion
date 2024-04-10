@@ -1,3 +1,4 @@
+/*
 import { model, models, Schema } from "mongoose";
 
 const UnorderedDesignSchema = new Schema(
@@ -13,3 +14,4 @@ const UnorderedDesignSchema = new Schema(
 const UnorderedDesign =
   models.UnorderedDesign || model("UnorderedDesign", UnorderedDesignSchema);
 export default UnorderedDesign;
+ */

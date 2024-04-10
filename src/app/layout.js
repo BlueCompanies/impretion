@@ -1,12 +1,23 @@
-import MainHeader from "./_components/Layouts/Header";
+import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 
-export default function MainLayout({ params, children }) {
+export default function MainLayout({
+  params: { session, ...params },
+  children,
+}) {
   return (
     <html>
-      <body style={params.section === "designs" ? { overflow: "hidden" } : {}}>
-        {children}
-      </body>
+      <SessionProvider session={session}>
+        <body
+          style={
+            params.section === "designs"
+              ? { overflow: "hidden" }
+              : { marginTop: "90px" }
+          }
+        >
+          {children}
+        </body>
+      </SessionProvider>
     </html>
   );
 }
