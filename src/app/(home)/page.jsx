@@ -29,12 +29,12 @@ export default async function Home() {
         <img src="/home/icons/category-4.svg" className={styles.imageCategory} alt="Category 4"></img>
         <p>Gorras</p>
       </div>
-      {/*
+
       <div className={styles.imageContainer}>
         <img src="/home/icons/category-5.svg" className={styles.imageCategory} alt="Category 5"></img>
         <p>Contenedores</p>
       </div>
-       */}
+       
     </div>
     <Presentation />
 
