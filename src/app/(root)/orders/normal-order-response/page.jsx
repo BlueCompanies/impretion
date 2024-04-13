@@ -1,7 +1,7 @@
 "use client"
 
 import { useSearchParams } from 'next/navigation'
-
+import { Suspense } from "react"
 
 export default function NormalOrderResponse () {
     const searchParams = useSearchParams()
@@ -24,6 +24,7 @@ export default function NormalOrderResponse () {
 
     return(
         <>
+        <Suspense fallback={<>Loading...</>}>
         <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
         <div style={{display:"flex", justifyContent:"center", alignItems:"center", width:"100%", backgroundColor:"#428bff", height:"200px"}}>
             <h1 style={{fontSize:"40px", fontWeight:700, color:"#fff"}}>GRACIAS POR TU COMPRA</h1>
@@ -49,6 +50,7 @@ export default function NormalOrderResponse () {
             </div>
         </div>
         </div>
+        </Suspense>
         </>
     )
 }

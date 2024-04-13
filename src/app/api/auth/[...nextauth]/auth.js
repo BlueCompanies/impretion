@@ -24,7 +24,6 @@ export const {
 
       if (!document) {
         const newUser = await insertUser(profile.email, profile.name);
-        console.log(newUser);
       }
       return profile;
     },

@@ -55,15 +55,12 @@ export async function POST(req, res) {
           },
           update: {
             $set: {
-              affiliateData: {
-                affiliateId: body,
-              },
+              "affiliateData.affiliateId": body,
             },
           },
         }),
       }
     );
-
     const insertedIDData = await insertedIDResponse.json();
     console.log(insertedIDData);
     return NextResponse.json({ data: body }, { status: 200 });
