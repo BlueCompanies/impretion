@@ -3,6 +3,8 @@ import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import NewPartner from "../_components/Partnership/NewPartner";
 import Partnership from "../_components/Partnership";
 
+export const runtime = "edge";
+
 export default async function Page() {
   const session = await auth();
 

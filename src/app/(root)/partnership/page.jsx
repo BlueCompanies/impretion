@@ -1,6 +1,7 @@
 "use client"
 
 import { signIn } from "next-auth/react"
+export const runtime = "edge";
 
 export default function Page() {
     const handleLogin = async() => {

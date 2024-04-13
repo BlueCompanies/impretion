@@ -2,6 +2,8 @@ import NextAuth from "next-auth";
 import { authConfig } from "./auth.config";
 import { getUser, insertUser } from "@/app/_lib/userProfiles";
 
+export const runtime = "edge";
+
 export const {
   handlers: { GET, POST },
   auth,

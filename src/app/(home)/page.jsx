@@ -5,6 +5,8 @@ import Presentation from "./_components/Presentation";
 import ReferLinkProccessing from "./_components/ReferLinkProccessing";
 //import LookProductsButton from "./_components/HomePage/LookProductsButton";
 
+export const runtime = "edge";
+
 export default async function Home() {
  
   return (
