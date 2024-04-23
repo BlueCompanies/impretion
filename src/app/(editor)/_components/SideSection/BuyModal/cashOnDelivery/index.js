@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "./styles.module.css";
 import colombiaStates from "@/app/_lib/colombiaStates";
 import BasicLoader from "@/app/_components/Loaders/Loader";
-
+import DiscountCode from "../_components/DiscountCode";
 export default function CashOnDelivery(props) {
   const {
     productName,
@@ -22,6 +22,7 @@ export default function CashOnDelivery(props) {
     orderID,
     shipmentData,
     orderLoading,
+    userData,
   } = props;
   const [userDeliveryData, setUserDeliveryData] = useState({
     address: "",
@@ -435,7 +436,7 @@ export default function CashOnDelivery(props) {
                     width: "200px",
                   }}
                 >
-                  Precio de producción
+                  Precio de producción{" "}
                 </span>
                 <span
                   style={{
@@ -444,9 +445,12 @@ export default function CashOnDelivery(props) {
                     fontWeight: 700,
                   }}
                 >
-                  {productBasePrice}
+                  {productBasePrice}{" "}
                 </span>
                 COP
+                {userData?.affiliateData.affiliateId.enabled && (
+                  <> (sin descuentos)</>
+                )}
               </div>
 
               <div className={styles.properties}>
@@ -478,6 +482,7 @@ export default function CashOnDelivery(props) {
               </div>
             </div>
 
+            <DiscountCode />
             <div className={styles.properties}>
               <span
                 style={{
@@ -489,52 +494,61 @@ export default function CashOnDelivery(props) {
               >
                 Precio total
               </span>
-              <span
+
+              <div
                 style={{
                   marginLeft: "4px",
                 }}
               >
-                <>{productTotal}</>
-              </span>
+                {userData?.affiliateData.affiliateId.enabled ? (
+                  <>{productTotal - productTotal * 0.1}</>
+                ) : (
+                  <>{productTotal}</>
+                )}
+              </div>
             </div>
 
-            <div className={styles.properties}>
-              <span
-                style={{
-                  background: "#e2e2e2",
-                  padding: "4px",
-                  color: "#333",
-                  width: "200px",
-                }}
-              >
-                Codigo de descuento
-              </span>
-              <span
-                style={{
-                  margin: "0px 2px 0px 4px",
-                  color: "#000",
-                  fontWeight: 700,
-                }}
-              >
-                asdf
-              </span>
-            </div>
+            <div style={{ border: "1px solid #dedede", margin: "10px" }}></div>
 
-            {discountPercentage > 0 && (
+            {userData?.affiliateData.affiliateId.enabled && (
               <div
                 style={{
                   width: "100%",
-                  background: "#4cfc55",
-                  border: "1px solid #0e8a14",
+                  background: "#00B8D1",
+                  border: "1px solid #006876",
                   padding: "3px",
                   borderRadius: "4px",
                   marginBottom: "3px",
-                  color: "#025706",
+                  color: "#fff",
                 }}
               >
-                Descuento del {discountPercentage}% aplicado
+                Has obtenido un descuento del 10% mediante un código
+                promocional. Este se aplicará al precio total al procesar tu
+                compra.
               </div>
             )}
+            {discountPercentage > 0 && (
+              <>
+                <div
+                  style={{ border: "1px solid #dedede", margin: "10px" }}
+                ></div>
+                <div
+                  style={{
+                    width: "100%",
+                    background: "#4cfc55",
+                    border: "1px solid #0e8a14",
+                    padding: "3px",
+                    borderRadius: "4px",
+                    marginBottom: "3px",
+                    color: "#025706",
+                  }}
+                >
+                  Descuento del {discountPercentage}% aplicado por compra
+                  mayoritaria.
+                </div>
+              </>
+            )}
+            <div style={{ border: "1px solid #dedede", margin: "10px" }}></div>
             <div>
               {discounts?.length > 0 &&
                 discounts?.map((discount) => (
@@ -549,19 +563,39 @@ export default function CashOnDelivery(props) {
             onSubmit={(e) => newOrder(e, userDeliveryData)}
             ref={formRef}
             method="post"
-            action="https://checkout.payulatam.com/ppp-web-gateway-payu/"
+            action="https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/"
           >
-            <input name="merchantId" type="hidden" value="995979" />
-            <input name="accountId" type="hidden" value="1004552" />
+            {/* Checks if there is any discount by promo code */}
+            <input name="merchantId" type="hidden" value="508029" />
+            <input name="accountId" type="hidden" value="512321" />
             <input name="taxReturnBase" value="0" type="hidden"></input>
             <input name="tax" value="0" type="hidden"></input>
             <input
               name="description"
               type="hidden"
-              value={`${productQuantity}x ${productName}` || ""}
+              value={
+                `${productQuantity}x ${productName} | ${
+                  userData?.affiliateData.affiliateId.enabled &&
+                  "Descuento del 10% sobre el precio total"
+                }` || ""
+              }
             />
-            <input name="referenceCode" type="hidden" value={keys.uuid || ""} />
-            <input name="amount" type="hidden" value={productTotal || ""} />
+            {/*keys.uuid || ""*/}
+            <input
+              name="referenceCode"
+              type="hidden"
+              value={"uiuziuixxwqqqzttzxxyy"}
+            />
+            {/* the full amount should be checked if affiliated id is enabled if so, add the 10% discount to the total amount */}
+            <input
+              name="amount"
+              type="hidden"
+              value={
+                userData?.affiliateData.affiliateId.enabled
+                  ? 14000 - 14000 * 0.1 || ""
+                  : 14000 || ""
+              }
+            />
             <input name="currency" type="hidden" value="COP" />
             <input name="shippingCountry" type="hidden" value="CO"></input>
             <input name="Ing" type="hidden" value="es"></input>
@@ -591,20 +625,21 @@ export default function CashOnDelivery(props) {
               value={shipmentData.provinceLocation.province || ""}
             ></input>
 
+            {/* keys.signature */}
             <input
               name="signature"
               type="hidden"
-              value={keys.signature || ""}
+              value={"bdece5e692bc5f1e0619dfc108b0b686"}
             />
             <input name="test" type="hidden" value="1" />
             <input name="extra1" type="hidden" value={orderID || ""}></input>
             <input
               name="extra2"
               type="hidden"
-              value={`Compra de ${productQuantity} ${productName} personalizado(a/s) ${
-                discountPercentage > 0
-                  ? `con un descuento del ${discountPercentage}% aplicado.`
-                  : ""
+              value={`${
+                userData?.affiliateData?.affiliateId?.enabled
+                  ? userData?.affiliateData.affiliateId.id
+                  : null
               }`}
             ></input>
             <input
@@ -615,12 +650,12 @@ export default function CashOnDelivery(props) {
             <input
               name="responseUrl"
               type="hidden"
-              value="https://impretion.com/orders/normal-order-response"
+              value="http//:localhost:3000/orders/normal-order-response"
             />
             <input
               name="confirmationUrl"
               type="hidden"
-              value="https://impretion.com/api/orders/normal-order/confirmation"
+              value="https://0976-2800-e2-1300-3ea-3139-ef10-5049-1889.ngrok-free.app/api/orders/normal-order/confirmation"
             />
 
             <div
@@ -634,7 +669,7 @@ export default function CashOnDelivery(props) {
               <input
                 name="Submit"
                 type="submit"
-                value="Comprar"
+                value={`Comprar`}
                 disabled={productTotal <= 0 ? true : false}
                 style={{
                   border: "none",

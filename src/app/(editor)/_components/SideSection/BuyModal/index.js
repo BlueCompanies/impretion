@@ -10,7 +10,9 @@ import md5 from "md5";
 import { useOrderFormSent, usePreviewMode, useStoreItems } from "@/app/_store";
 import awsS3 from "@/app/_lib/aws";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import CashOnDelivery from "./cashOnDelivery";
+import CashOnDelivery from "./CashOnDelivery";
+import { useSession } from "next-auth/react";
+import { getUser } from "@/app/_lib/userProfiles";
 
 function BuyModalWindow({ currentProduct }) {
   const formRef = useRef(null);
@@ -19,6 +21,11 @@ function BuyModalWindow({ currentProduct }) {
   const isPreviewing = usePreviewMode((state) => state.isPreviewing);
   const [product, setProduct] = useState(null);
   const [fetchedCouriers, setFetchedCouriers] = useState([]);
+
+  // user session
+  const { data: session } = useSession();
+  const [userData, setUserData] = useState();
+
   const [fetchedProvinces, setFetchedProvinces] = useState({
     originProvinces: {},
     destinationProvinces: {},
@@ -566,8 +573,15 @@ function BuyModalWindow({ currentProduct }) {
           },
           priceData: {
             basePrice: product?.productData?.prices?.basePrice,
+            totalAmount: userData?.affiliateData?.affiliateId?.enabled
+              ? productTotal - productTotal * 0.1
+              : productTotal,
             discountedPrice: priceWithDiscount,
             percentageDiscounted: discountPercentage,
+            discountCode: userData?.affiliateData?.affiliateId?.enabled
+              ? userData?.affiliateData?.affiliateId?.id
+              : null,
+            discountCodeUserEmail: userData?.email ? userData?.email : null,
           },
           orderTime: {
             colombianTime,
@@ -590,6 +604,18 @@ function BuyModalWindow({ currentProduct }) {
       console.log(error);
     }
   };
+
+  // GET USER PROMO CODE
+  useEffect(() => {
+    if (session) {
+      const { user } = session;
+      (async () => {
+        const userByEmail = await getUser(user.email);
+        const { document } = userByEmail;
+        setUserData(document);
+      })();
+    }
+  }, [session]);
 
   return (
     <div>
@@ -620,6 +646,7 @@ function BuyModalWindow({ currentProduct }) {
                   getProvinces={getProvinces}
                   getStates={getStates}
                   productQuantityChange={productQuantityChange}
+                  userData={userData}
                 />
               )}
               <button

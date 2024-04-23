@@ -4,7 +4,6 @@ import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { FaUserCircle } from "react-icons/fa";
 import { signOut } from "next-auth/react";
 import Logout from "./_components/Logout";
-import MobileTest from "./_components/MobileTest";
 
 export default async function MainHeader() {
   const session = await auth();
@@ -23,7 +22,6 @@ export default async function MainHeader() {
         borderBottom: "2px solid #e9e9e9",
       }}
     >
-      <MobileTest />
       <div
         style={{
           display: "flex",
@@ -40,6 +38,7 @@ export default async function MainHeader() {
             impretion
           </Link>
         </div>
+        {/*
 
         <div
           style={{
@@ -96,6 +95,7 @@ export default async function MainHeader() {
             </>
           )}
         </div>
+*/}
       </div>
     </header>
   );

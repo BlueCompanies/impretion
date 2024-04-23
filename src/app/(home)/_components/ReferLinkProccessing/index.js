@@ -9,7 +9,7 @@ export default function ReferLinkProccessing() {
   useEffect(() => {
     // gets ref param from the url
     if (refId) {
-      localStorage.setItem("refId", JSON.stringify(refId));
+      localStorage.setItem("refId", refId);
       setMessage(
         "¡Tienes descuentos al comprar cualquier producto ya que entraste con un link especial!"
       );

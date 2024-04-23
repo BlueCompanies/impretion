@@ -29,9 +29,9 @@ export default function GenerateAffiliateLink() {
       },
       body: JSON.stringify(generatedId),
     });
-    console.log(response);
+    console.log("shota_ ", response);
     const { data } = await response.json();
-
+    console.log("vrg: ", data);
     if (response.status === 409) {
       setError(data);
       return;
@@ -51,10 +51,9 @@ export default function GenerateAffiliateLink() {
           return document;
         };
         const userDetails = await getUserFromDB();
-        setAffiliateId(userDetails.affiliateData?.affiliateId);
-        console.log(userDetails.affiliateData?.affiliateId);
+        setAffiliateId(userDetails?.affiliateData?.affiliateId?.id);
         setButtonMessage(
-          userDetails.affiliateData?.affiliateId
+          userDetails?.affiliateData?.affiliateId?.id
             ? GENERATED_LINK_TEXT
             : GENERATE_LINK_TEXT
         );

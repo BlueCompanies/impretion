@@ -54,8 +54,7 @@ export const insertUser = async (email, name) => {
   return data;
 };
 
-export const updateUser = async (email, fields) => {
-  console.log(fields, email);
+export const updateUser = async (filter, fields) => {
   const response = await fetch(
     "https://sa-east-1.aws.data.mongodb-api.com/app/data-lqpho/endpoint/data/v1/action/updateOne",
     {
@@ -69,12 +68,8 @@ export const updateUser = async (email, fields) => {
         dataSource: "Impretion",
         database: "users",
         collection: "profiles",
-        filter: {
-          email,
-        },
-        update: {
-          $set: fields,
-        },
+        filter: filter,
+        update: fields,
       }),
     }
   );

@@ -2,12 +2,7 @@
 import { useState } from "react";
 import GenerateAffiliateLink from "../GenerateAffiliateLink";
 import { IoIosWarning } from "react-icons/io";
-import { getUser } from "@/app/_lib/userProfiles";
 import { FaCopy, FaPhoneAlt, FaWallet } from "react-icons/fa";
-import ShortUniqueId from "short-unique-id";
-import { RiMessage2Fill } from "react-icons/ri";
-import { GrStatusGood } from "react-icons/gr";
-import { IoIosSend } from "react-icons/io";
 
 export default function Partner({ user }) {
   const [error, setError] = useState("");
@@ -17,7 +12,7 @@ export default function Partner({ user }) {
       setError("No tienes dinero para retirar.");
     }
   };
-
+  console.log(user);
   return (
     <>
       <div
@@ -65,46 +60,33 @@ export default function Partner({ user }) {
           <div
             style={{
               display: "flex",
-              alignItems: "center",
               marginTop: "15px",
+              flexDirection: "column",
             }}
           >
             <p style={{ fontWeight: 700, color: "#555555" }}>
-              https://impretion.com?ref={user.affiliateData.affiliateId}
+              https://impretion.com?ref={user.affiliateData.affiliateId.id}
             </p>
-            <div
+            <button
               style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                marginLeft: "10px",
+                width: "fit-content",
+                cursor: "pointer",
+                marginTop: "10px",
+                borderRadius: "4px",
+                background: "#1A83FF",
+                outline: "none",
+                border: "none",
+                padding: "10px",
+                color: "#fff",
               }}
+              onClick={() =>
+                navigator.clipboard.writeText(
+                  `https://impretion.com?ref=${user.affiliateData.affiliateId}`
+                )
+              }
             >
-              <button
-                onClick={() =>
-                  navigator.clipboard.writeText(
-                    `https://impretion.com?ref=${user.affiliateData.affiliateId}`
-                  )
-                }
-                style={{
-                  border: "1px solid #555555",
-                  outline: "none",
-                  background: "#fff",
-                  padding: "5px",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                }}
-              >
-                <FaCopy
-                  style={{
-                    fontSize: "16px",
-                    color: "#555555",
-                  }}
-                />
-              </button>
-              <span style={{ fontSize: "10px" }}>Copiar</span>
-            </div>
+              Copiar enlace
+            </button>
           </div>
         </div>
 
@@ -176,6 +158,11 @@ export default function Partner({ user }) {
         </div>
 
         <div style={{ border: "1px solid #dedede", marginTop: "10px" }}></div>
+
+        <div style={{ marginTop: "10px" }}>
+          Número de productos que han comprado con tu enlace:{" "}
+          {user.affiliateData.sales}
+        </div>
       </div>
     </>
   );

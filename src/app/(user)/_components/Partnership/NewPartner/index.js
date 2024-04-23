@@ -64,12 +64,17 @@ export default function NewPartner({ user }) {
     }
 
     setErrors("");
-    await updateUser(email, {
-      "affiliateData.isAffiliated": true,
-      "affiliateData.wallet": 0,
-      "affiliateData.sales": 0,
-      "affiliateData.soldProducts": {},
-    });
+    await updateUser(
+      { email },
+      {
+        $set: {
+          "affiliateData.isAffiliated": true,
+          "affiliateData.wallet": 0,
+          "affiliateData.sales": 0,
+          "affiliateData.soldProducts": {},
+        },
+      }
+    );
     window.location.reload();
   };
 

@@ -15,10 +15,10 @@ export default async function Home() {
     <MainHeader  />
   
     <div style={{ background: '#e6e6e6', height: '90px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflowX: 'auto', overflowY:"hidden" }}>
-      <div className={styles.imageContainer}>
+      {/*<div className={styles.imageContainer}>
         <img src="/home/icons/category-1.svg" className={styles.imageCategory} alt="Category 1"></img>
         <p>Apariencia</p>
-      </div>
+  </div>*/}
       <div className={styles.imageContainer}>
         <img src="/home/icons/category-2.svg" className={styles.imageCategory} alt="Category 2"></img>
         <p>Útiles</p>

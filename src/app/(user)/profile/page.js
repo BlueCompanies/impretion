@@ -23,7 +23,18 @@ export default async function Page() {
         }}
       >
         <div style={{ background: "#fff", width: "300px" }}>
-          <button>Programa de socios</button>
+          <button
+            style={{
+              width: "100%",
+              border: "none",
+              outline: "none",
+              padding: "10px",
+              background: "#1A83FF",
+              color: "#fff",
+            }}
+          >
+            Programa de socios
+          </button>
         </div>
         <Partnership user={user} />
       </div>

@@ -55,7 +55,7 @@ export async function POST(req, res) {
           },
           update: {
             $set: {
-              "affiliateData.affiliateId": body,
+              "affiliateData.affiliateId": { id: body, enabled: true },
             },
           },
         }),
