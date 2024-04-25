@@ -10,7 +10,6 @@ import md5 from "md5";
 import { useOrderFormSent, usePreviewMode, useStoreItems } from "@/app/_store";
 import awsS3 from "@/app/_lib/aws";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import CashOnDelivery from "./CashOnDelivery";
 import { useSession } from "next-auth/react";
 import { getUser } from "@/app/_lib/userProfiles";
 
