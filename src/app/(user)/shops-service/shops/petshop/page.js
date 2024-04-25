@@ -1,6 +1,10 @@
 import { MdAddAPhoto } from "react-icons/md";
+import CashPaymentRequest from "../../_components/CashPaymentRequest";
 
-export default function Page() {
+export const runtime = "edge";
+export default async function Page({ searchParams }) {
+  console.log(searchParams);
+
   return (
     <>
       <header
@@ -38,34 +42,45 @@ export default function Page() {
             <input type="file" style={{ display: "none" }}></input>
             <div
               style={{
-                border: "1px solid red",
+                border: "2px dotted #8C52FF",
                 height: "150px",
                 borderRadius: "4px",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                background: "#E7DAFF",
               }}
             >
               <div
                 style={{
                   width: "100%",
-                  backgroundColor: "green",
                   display: "flex",
                   justifyContent: "center",
                   flexDirection: "column",
+                  alignItems: "center",
+                  cursor: "pointer",
                 }}
               >
-                <p>Foto de tu mascota</p>
-                <MdAddAPhoto />
+                <p
+                  style={{
+                    color: "#555555",
+                    fontWeight: 700,
+                  }}
+                >
+                  Foto de tu mascota
+                </p>
+                <MdAddAPhoto style={{ color: "#555555", fontSize: "24px" }} />
               </div>
               <div style={{}}>
                 <img
-                  src="/shops/icons/sammy-balto.webp"
+                  src="/shops/icons/upload-image-example.webp"
                   style={{ width: "150px" }}
                 ></img>
               </div>
             </div>
-            <input type="text"></input>
+            <p>Si asi lo prefieres, puedes darnos el nombre de tu mascota</p>
+            <input type="text" placeholder="Nombre de tu mascota"></input>
+            <CashPaymentRequest />
           </div>
         </div>
       </div>
