@@ -11,7 +11,7 @@ import awsS3 from "@/app/_lib/aws";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { useSession } from "next-auth/react";
 import { getUser } from "@/app/_lib/userProfiles";
-import CashOnDelivery from "./CashOnDelivery";
+import { CashOnDelivery } from "./CashOnDelivery";
 
 function BuyModalWindow({ currentProduct }) {
   const formRef = useRef(null);
