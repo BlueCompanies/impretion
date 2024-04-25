@@ -5,7 +5,7 @@ import styles from "./styles.module.css";
 import colombiaStates from "@/app/_lib/colombiaStates";
 import BasicLoader from "@/app/_components/Loaders/Loader";
 import DiscountCode from "../_components/DiscountCode";
-export function CashOnDelivery(props) {
+export function Delivery(props) {
   const {
     productName,
     productBasePrice,
