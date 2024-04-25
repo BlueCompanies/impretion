@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "./styles.module.css";
 import colombiaStates from "@/app/_lib/colombiaStates";
 import BasicLoader from "@/app/_components/Loaders/Loader";
@@ -565,7 +565,7 @@ export default function CashOnDelivery(props) {
             onSubmit={(e) => newOrder(e, userDeliveryData)}
             ref={formRef}
             method="post"
-            action="https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/"
+            //action="https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/"
           >
             {/* Checks if there is any discount by promo code */}
             <input name="merchantId" type="hidden" value="508029" />
@@ -657,7 +657,7 @@ export default function CashOnDelivery(props) {
             <input
               name="confirmationUrl"
               type="hidden"
-              value="https://0976-2800-e2-1300-3ea-3139-ef10-5049-1889.ngrok-free.app/api/orders/normal-order/confirmation"
+              value="/api/orders/normal-order/confirmation"
             />
 
             <div

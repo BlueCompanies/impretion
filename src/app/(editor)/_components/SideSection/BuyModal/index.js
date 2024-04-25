@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./styles.module.css";
 import { v4 as uuidv4 } from "uuid";
-import colombiaStates from "@/app/_lib/colombiaStates";
 import { BsFillCartFill } from "react-icons/bs";
 import { toPng } from "html-to-image";
 import md5 from "md5";
@@ -12,7 +11,7 @@ import awsS3 from "@/app/_lib/aws";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { useSession } from "next-auth/react";
 import { getUser } from "@/app/_lib/userProfiles";
-import CashOnDelivery from "@/app/(editor)/_components/SideSection/BuyModal/CashOnDelivery";
+import CashOnDelivery from "./CashOnDelivery";
 
 function BuyModalWindow({ currentProduct }) {
   const formRef = useRef(null);
