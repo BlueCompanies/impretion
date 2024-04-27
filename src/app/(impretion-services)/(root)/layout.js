@@ -1,5 +1,5 @@
-import MainHeader from "../_components/Layouts/Header";
-import "../globals.css";
+import MainHeader from "@/app/_components/Layouts/Header";
+import "@/app/globals.css";
 
 export const metadata = {
   title: "Create Next App",
