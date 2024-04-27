@@ -1,6 +1,6 @@
 "use client";
 import { SessionProvider } from "next-auth/react";
-import "@/app/globals.css";
+import "../globals.css";
 
 export default function MainLayout({
   params: { session, ...params },

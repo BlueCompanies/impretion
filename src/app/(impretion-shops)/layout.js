@@ -1,4 +1,6 @@
-import "@/app/globals.css";
+"use client";
+
+import "../globals.css";
 
 export const metadata = {
   title: "Next.js",
