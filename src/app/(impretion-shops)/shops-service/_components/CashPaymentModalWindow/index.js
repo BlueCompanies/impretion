@@ -81,8 +81,8 @@ export default function CashPaymentModalWindow({
         }}
       >
         <FieldDescription>
-          Paga en efectivo y dale en "Aceptar" para que el vendedor procese tu
-          compra.
+          Paga en efectivo y dale en &quot;Aceptar&quot; para que el vendedor
+          procese tu compra.
         </FieldDescription>
         <div
           style={{
