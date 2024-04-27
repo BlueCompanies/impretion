@@ -11,8 +11,6 @@ export const authConfig = {
     }),
     Credentials({
       async authorize(credentials) {
-        console.log(credentials);
-
         return null;
       },
     }),

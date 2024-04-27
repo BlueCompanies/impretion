@@ -9,7 +9,7 @@ export const insertPaymentLinkSession = async (id) => {
             "jUlBvV4q0boUTjyw4bCWXKEVnzPg0YnHdFM8xeqtJQO0pGjLFewwWpu3gpOKBKbj",
           contentType: "application/json",
         },
-        body: JSON.stringify({ linkSessionId: id }),
+        body: JSON.stringify({ linkSessionId: id, details: "" }),
       }
     );
     //console.log(response);

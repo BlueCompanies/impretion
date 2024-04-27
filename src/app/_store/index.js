@@ -288,3 +288,9 @@ export const useGeneratedMockups = create((set) => ({
       return { layerItems: updatedItems };
     }),
   */
+
+// IMPRETION SHOPSERVICES
+export const useShopServicesUserData = create((set) => ({
+  orderData: {},
+  setOrderData: (value) => set({ orderData: value }), // Update deliveryData directly
+}));

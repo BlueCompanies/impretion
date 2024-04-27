@@ -20,7 +20,6 @@ export const {
     },
 
     async signIn({ profile }) {
-      console.log(profile.email);
       const userExists = await getUser(profile.email || null);
       const { document } = userExists;
 

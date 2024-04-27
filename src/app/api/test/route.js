@@ -5,11 +5,7 @@ export const runtime = "edge";
 
 export async function GET() {
   try {
-    console.log("Trigerensin funcionando jiji jip!!!");
-    return NextResponse.json(
-      { trigger: "Trigger funcionando chavlin tin tin!" },
-      { status: 200 }
-    );
+    return NextResponse.json({ trigger: "" }, { status: 200 });
   } catch (error) {
     console.error("Error processing request:", error);
     return NextResponse.json({}, { status: 500 });

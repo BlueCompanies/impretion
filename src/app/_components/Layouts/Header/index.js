@@ -38,7 +38,6 @@ export default async function MainHeader() {
             impretion
           </Link>
         </div>
-        {/*
 
         <div
           style={{
@@ -95,7 +94,6 @@ export default async function MainHeader() {
             </>
           )}
         </div>
-*/}
       </div>
     </header>
   );
