@@ -28,7 +28,7 @@ export default async function Page({ searchParams }) {
   const { expirationDateInMilliseconds } = document;
   const currentDate = new Date().getTime();
 
-  if (!currentDate > expirationDateInMilliseconds) {
+  if (currentDate > expirationDateInMilliseconds) {
     return <>404 Página no encontrada. Esta página ha caducado.</>;
   } else {
     return (
@@ -76,8 +76,14 @@ export default async function Page({ searchParams }) {
             height: "60px",
           }}
         >
-          <AcceptPayment payoutId={payoutId} />
-          <DenyPayment payoutId={payoutId} />
+          <AcceptPayment
+            payoutId={payoutId}
+            expirationDateInMilliseconds={expirationDateInMilliseconds}
+          />
+          <DenyPayment
+            payoutId={payoutId}
+            expirationDateInMilliseconds={expirationDateInMilliseconds}
+          />
         </div>
       </div>
     );

@@ -9,10 +9,12 @@ export default async function Page({ searchParams }) {
   // Obtener parámetros de búsqueda del código QR escaneado para obtener la información actual de la tienda
   const { shopRef } = searchParams;
   const shopInfo = await getShopInfo(shopRef);
+  console.log("daf: ", shopInfo);
   const { shopName } = shopInfo || "";
-  await fetch("http://localhost:3000/api/user/get-user-ip");
+  console.log("daf: ", shopRef);
+  //await fetch("http://localhost:3000/api/user/get-user-ip");
 
-  if (shopInfo) {
+  if (shopInfo && shopRef) {
     return (
       <div>
         <div

@@ -54,8 +54,6 @@ export async function POST(request) {
       }
     );
 
-    console.log("estatus: ", response.status);
-
     if (response.status === 200) {
       console.log("extra2: ", jsonData.extra2);
       // Update user's wallet if extra2 is not null
@@ -64,7 +62,6 @@ export async function POST(request) {
           { "affiliateData.affiliateId.id": jsonData.extra2 },
           { $inc: { "affiliateData.wallet": Number(jsonData.value) } }
         );
-        console.log(userUpdateResponse);
         if (userUpdateResponse.status === 200) {
           return NextResponse.json({}, { status: 200 });
         } else {

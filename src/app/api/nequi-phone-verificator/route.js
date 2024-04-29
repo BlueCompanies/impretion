@@ -29,13 +29,10 @@ export async function POST(request) {
     });
 
     const data = await response.json();
-    console.log("RESPONSE: ", response);
-    console.log("DATA: ", data);
+
     const authorization = `Basic ${Buffer.from(
       `rbeqru5cpvvrp7gpsejj385bh:lbjpfrk3jbetpf9u0q2o4g75h2jr16h46qp2m246u9d9m4nfjjv`
     ).toString("base64")}`;
-
-    console.log(authorization);
   } catch (error) {
     return NextResponse.json(
       { error: "Internal Server Error" },

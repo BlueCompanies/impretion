@@ -62,7 +62,6 @@ export async function POST(req, res) {
       }
     );
     const insertedIDData = await insertedIDResponse.json();
-    console.log(insertedIDData);
     return NextResponse.json({ data: body }, { status: 200 });
   }
 

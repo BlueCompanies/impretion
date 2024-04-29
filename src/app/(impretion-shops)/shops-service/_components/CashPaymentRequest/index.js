@@ -9,18 +9,19 @@ import CashPaymentModalWindow from "../CashPaymentModalWindow";
 import PaymentTimer from "../PaymentTimer";
 import { MdCancel } from "react-icons/md";
 import { FaClock } from "react-icons/fa";
+import NotFoundPage from "../NotFoundPageModal";
+import { getCookie } from "cookies-next";
 
 export default function CashPaymentRequest() {
   const [paymentInProcess, setPaymentInProcess] = useState(false);
   const [showModalWindow, setShowModalWindow] = useState(false);
   const [paymentRequestAccepted, setPaymentRequestAccepted] = useState(false);
   const [isCanceled, setIsCanceled] = useState(false);
+  const [isActiveSession, setIsActiveSession] = useState(true);
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-
-  // set query param to the current request, this occurs when the user calls the event source
 
   // User messages feedback
   const [paymentStatusMessage, setPaymentStatusMessage] = useState("");
@@ -38,6 +39,7 @@ export default function CashPaymentRequest() {
       setIsCanceled(false);
 
       const params = new URLSearchParams(searchParams);
+      console.log(generatedId);
       params.set("payoutId", generatedId);
       replace(`${pathname}?${params.toString()}`);
 
@@ -103,19 +105,12 @@ export default function CashPaymentRequest() {
   useEffect(() => {
     if (paymentRequestAccepted) {
       payoutRequest();
-      return;
     }
-    setPaymentRequestAccepted(false);
   }, [paymentRequestAccepted]);
 
   const modalWindowHandler = () => {
     setShowModalWindow(!showModalWindow);
   };
-
-  useEffect(() => {
-    console.log(showModalWindow);
-    console.log(paymentRequestAccepted);
-  }, [showModalWindow]);
 
   useEffect(() => {
     // Apply overflow hidden to the body when payment process is active
@@ -133,102 +128,109 @@ export default function CashPaymentRequest() {
 
   return (
     <div style={{ width: "100%", margin: "10px" }}>
-      {paymentInProcess && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            background: "#fff",
-            zIndex: 9999,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-        >
-          <div>
+      {isActiveSession ? (
+        <>
+          {paymentInProcess && (
             <div
               style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                background: "#fff",
+                zIndex: 9999,
                 display: "flex",
-                flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
+                flexDirection: "column",
               }}
             >
-              <PaymentTimer isCanceled={isCanceled} />
-            </div>
-            {paymentStatusMessage.length > 0 ? (
-              <div
-                style={{
-                  marginTop: "15px",
-                  color: isCanceled ? "#EE1D52" : "#1DEE4B",
-                  display: "flex",
-                }}
-              >
-                <div style={{ width: "20px" }}>
-                  <MdCancel />
+              <div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <PaymentTimer isCanceled={isCanceled} />
                 </div>
-                <div>
-                  <p>{paymentStatusMessage}</p>
+                {paymentStatusMessage.length > 0 ? (
+                  <div
+                    style={{
+                      marginTop: "15px",
+                      color: isCanceled ? "#EE1D52" : "#1DEE4B",
+                      display: "flex",
+                    }}
+                  >
+                    <div style={{ width: "20px" }}>
+                      <MdCancel />
+                    </div>
+                    <div>
+                      <p>{paymentStatusMessage}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      marginTop: "15px",
+                      color: "#555",
+                      fontSize: "17px",
+                      display: "flex",
+                    }}
+                  >
+                    <div style={{ width: "20px" }}>
+                      <FaClock />
+                    </div>
+                    <div>
+                      <p>Esperando que el cliente acepte tu pago.</p>
+                    </div>
+                  </div>
+                )}
+                <div
+                  style={{
+                    margin: "auto",
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "5px",
+                  }}
+                >
+                  <p style={{ color: "#555" }}>
+                    Código de cliente -{" "}
+                    {searchParams.get("payoutId") &&
+                      searchParams.get("payoutId").toLocaleLowerCase()}
+                  </p>
                 </div>
               </div>
-            ) : (
-              <div
-                style={{
-                  marginTop: "15px",
-                  color: "#555",
-                  fontSize: "17px",
-                  display: "flex",
-                }}
-              >
-                <div style={{ width: "20px" }}>
-                  <FaClock />
-                </div>
-                <div>
-                  <p>Esperando que el cliente acepte tu pago.</p>
-                </div>
-              </div>
-            )}
-            <div
-              style={{
-                margin: "auto",
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "5px",
-              }}
-            >
-              <p style={{ color: "#555" }}>
-                Código de cliente -{" "}
-                {searchParams.get("payoutId").toLocaleLowerCase()}
-              </p>
             </div>
-          </div>
-        </div>
-      )}
+          )}
 
-      <button
-        onClick={modalWindowHandler}
-        style={{
-          width: "100%",
-          padding: "6px",
-          borderRadius: "4px",
-          outline: "none",
-          border: "none",
-          background: "#fff",
-          color: "#555",
-        }}
-      >
-        Solicitar pago
-      </button>
+          <button
+            onClick={modalWindowHandler}
+            style={{
+              width: "100%",
+              padding: "6px",
+              borderRadius: "4px",
+              outline: "none",
+              border: "none",
+              background: "#fff",
+              color: "#555",
+            }}
+          >
+            Solicitar pago
+          </button>
 
-      {showModalWindow && (
-        <CashPaymentModalWindow
-          setShowModalWindow={setShowModalWindow}
-          setPaymentRequestAccepted={setPaymentRequestAccepted}
-        />
+          {showModalWindow && (
+            <CashPaymentModalWindow
+              setShowModalWindow={setShowModalWindow}
+              setPaymentRequestAccepted={setPaymentRequestAccepted}
+            />
+          )}
+        </>
+      ) : (
+        <NotFoundPage />
       )}
     </div>
   );
