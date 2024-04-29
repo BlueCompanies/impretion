@@ -207,20 +207,38 @@ export default function CashPaymentRequest() {
             </div>
           )}
 
-          <button
-            onClick={modalWindowHandler}
-            style={{
-              width: "100%",
-              padding: "6px",
-              borderRadius: "4px",
-              outline: "none",
-              border: "none",
-              background: "#fff",
-              color: "#555",
-            }}
-          >
-            Solicitar pago
-          </button>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <button
+              onClick={modalWindowHandler}
+              style={{
+                width: "100%",
+                padding: "6px",
+                borderRadius: "4px",
+                outline: "none",
+                border: "none",
+                background: "#fff",
+                color: "#555",
+              }}
+            >
+              Solicitar pago en efectivo
+            </button>
+
+            <button
+              onClick={modalWindowHandler}
+              style={{
+                width: "100%",
+                padding: "6px",
+                borderRadius: "4px",
+                outline: "none",
+                border: "none",
+                background: "#fff",
+                color: "#555",
+                margin: "5px",
+              }}
+            >
+              Pagar después por transferencia
+            </button>
+          </div>
 
           {showModalWindow && (
             <CashPaymentModalWindow
