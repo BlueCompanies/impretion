@@ -1,8 +1,8 @@
 import React from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
-const PaymentTimer = ({ isCanceled }) => {
-  console.log(isCanceled);
+const PaymentTimer = ({ paymentStatus }) => {
+  console.log("¡¡_ ", paymentStatus);
   const customChildren = ({ remainingTime }) => {
     const minutes = Math.floor(remainingTime / 60);
     const seconds = remainingTime % 60;
@@ -24,7 +24,12 @@ const PaymentTimer = ({ isCanceled }) => {
             fontSize: "42px",
             fontWeight: "bold",
             fontFamily: "sans-serif",
-            color: isCanceled ? "#EE1D52" : "#8C52FF",
+            color:
+              paymentStatus !== ""
+                ? paymentStatus === "accepted"
+                  ? "green"
+                  : "red"
+                : "#8C52FF",
           }}
         >
           <span style={{ margin: "0 5px" }}>
@@ -48,9 +53,15 @@ const PaymentTimer = ({ isCanceled }) => {
       }}
     >
       <CountdownCircleTimer
-        isPlaying={isCanceled ? false : true}
+        isPlaying={paymentStatus !== "" ? false : true}
         duration={300}
-        colors={isCanceled ? "#EE1D52" : "#8C52FF"}
+        colors={
+          paymentStatus !== ""
+            ? paymentStatus === "accepted"
+              ? "green"
+              : "red"
+            : "#8C52FF"
+        }
         size={250}
         strokeWidth={18}
         strokeLinecap={"butt"}

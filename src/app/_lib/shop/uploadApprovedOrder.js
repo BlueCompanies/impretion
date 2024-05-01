@@ -1,4 +1,4 @@
-export const insertPaymentLinkSession = async (id) => {
+export default async function uploadApprovedOrder() {
   try {
     const response = await fetch(
       "https://sa-east-1.aws.data.mongodb-api.com/app/data-lqpho/endpoint/data/v1/action/insertOne",
@@ -7,9 +7,14 @@ export const insertPaymentLinkSession = async (id) => {
         headers: {
           apiKey:
             "jUlBvV4q0boUTjyw4bCWXKEVnzPg0YnHdFM8xeqtJQO0pGjLFewwWpu3gpOKBKbj",
-          contentType: "application/json",
+          "content-type": "application/json", // Add content-type header
         },
-        body: JSON.stringify({ linkSessionId: id, details: "" }),
+        body: JSON.stringify({
+          dataSource: "Impretion",
+          database: "orders",
+          collection: "approved-orders",
+          document: {},
+        }),
       }
     );
     //console.log(response);
@@ -19,4 +24,4 @@ export const insertPaymentLinkSession = async (id) => {
   } catch (error) {
     console.log(error);
   }
-};
+}

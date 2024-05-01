@@ -37,16 +37,37 @@ export default function CustomerDeliveryData() {
         }}
       >
         <p style={{ margin: "auto" }}>Datos de entrega</p>
+        <span
+          style={{
+            fontSize: "12px",
+            margin: "auto",
+            marginBottom: "10px",
+            color: "#ccc",
+            textDecoration: "underline",
+          }}
+        >
+          Asegurate de completar todos los campos
+        </span>
 
         <label style={{ marginTop: "5px" }}>
-          <span style={{ fontSize: "12px" }}>Tu nombre completo</span>
+          <p
+            style={{
+              fontSize: "12px",
+              color: orderData?.userData?.fullName === null && "red",
+            }}
+          >
+            Tu nombre completo
+          </p>
           <input
             type="text"
             style={{
               width: "100%",
               padding: "10px",
               borderRadius: "6px",
-              border: "1px solid #ccc",
+              border:
+                orderData?.userData?.fullName === null
+                  ? "1px solid red"
+                  : "1px solid #ccc",
               marginBottom: "5px",
               outline: "#8C52FF",
               fontFamily: "sans-serif",
@@ -59,14 +80,24 @@ export default function CustomerDeliveryData() {
         </label>
 
         <label style={{ marginTop: "5px" }}>
-          <span style={{ fontSize: "12px" }}>Dirección</span>
+          <p
+            style={{
+              fontSize: "12px",
+              color: orderData?.userData?.address === null && "red",
+            }}
+          >
+            Dirección
+          </p>
           <input
             type="text"
             style={{
               width: "100%",
               padding: "10px",
               borderRadius: "6px",
-              border: "1px solid #ccc",
+              border:
+                orderData?.userData?.address === null
+                  ? "1px solid red"
+                  : "1px solid #ccc",
               marginBottom: "5px",
               outline: "#8C52FF",
               fontFamily: "sans-serif",
@@ -101,16 +132,24 @@ export default function CustomerDeliveryData() {
         </label>
 
         <label style={{ marginTop: "5px" }}>
-          <span style={{ fontSize: "12px" }}>
+          <p
+            style={{
+              fontSize: "12px",
+              color: orderData?.userData?.cellphone === null && "red",
+            }}
+          >
             Número de celular de contacto
-          </span>
+          </p>
           <input
-            type="text"
+            type="number"
             style={{
               width: "100%",
               padding: "10px",
               borderRadius: "6px",
-              border: "1px solid #ccc",
+              border:
+                orderData?.userData?.cellphone === null
+                  ? "1px solid red"
+                  : "1px solid #ccc",
               marginBottom: "5px",
               outline: "#8C52FF",
               fontFamily: "sans-serif",

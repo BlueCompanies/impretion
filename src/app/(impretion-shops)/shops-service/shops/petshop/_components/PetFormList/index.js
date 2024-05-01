@@ -16,7 +16,7 @@ export default function PetFormList() {
       id: 1,
       image: "",
       petName: "",
-      petType: "",
+      petType: "", // Initialize petType as an empty string
       additionalNote: "",
       isActive: true,
     },
@@ -54,6 +54,7 @@ export default function PetFormList() {
     setPetFormListData((prevPetFormListData) =>
       prevPetFormListData.map((pet) => {
         if (pet.id === id) {
+          console.log("ptm ", name, pet);
           return { ...pet, [name]: value };
         }
         return pet;
@@ -64,6 +65,10 @@ export default function PetFormList() {
   useEffect(() => {
     setOrderData({ ...orderData, buyData: petFormListData });
   }, [petFormListData]);
+
+  useEffect(() => {
+    console.log(orderData);
+  }, [orderData]);
 
   return (
     <>
@@ -144,6 +149,8 @@ export default function PetFormList() {
                 <PetSelector
                   petFormOnChangeHandler={petFormOnChangeHandler}
                   id={pet.id}
+                  index={index}
+                  selectedPet={petFormListData[index].petType} // Pass selectedPet as a prop
                 />
 
                 <FieldDescription>
@@ -195,16 +202,27 @@ export default function PetFormList() {
             </div>
           ) : (
             <div
-              style={{ margin: "10px" }}
+              style={{
+                margin: "10px",
+              }}
               onClick={() => showPetFormHandler(pet.id)}
             >
+              {orderData.buyData[index].petType === null && (
+                <p style={{ fontSize: "12px", color: "red" }}>
+                  Debes seleccionar tu tipo de mascota en el apartado
+                  &quot;Selecciona tu tipo de mascota&quot;
+                </p>
+              )}
               <button
                 style={{
                   width: "100%",
                   height: "30px",
                   border: "none",
                   outline: "none",
-                  background: "#8C52FF",
+                  background:
+                    orderData.buyData[index].petType === null
+                      ? "red"
+                      : "#8C52FF",
                   borderRadius: "4px",
                   color: "#fff",
                 }}

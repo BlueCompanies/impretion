@@ -3,7 +3,10 @@ import DenyPayment from "../_components/PaymentStatus/DenyPayment";
 import FieldDescription from "../shops/petshop/_components/FieldDescription";
 
 export default async function Page({ searchParams }) {
-  const { payoutId } = searchParams;
+  const { payoutId, clientData } = searchParams;
+  const parsedClientData = JSON.parse(clientData);
+  console.log(parsedClientData);
+
   const findPaymentSession = await fetch(
     "https://sa-east-1.aws.data.mongodb-api.com/app/data-lqpho/endpoint/data/v1/action/findOne",
     {
@@ -85,6 +88,8 @@ export default async function Page({ searchParams }) {
             expirationDateInMilliseconds={expirationDateInMilliseconds}
           />
         </div>
+
+        <p>Costo total: $</p>
       </div>
     );
   }

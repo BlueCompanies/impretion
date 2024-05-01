@@ -29,10 +29,10 @@ export async function POST(req, res) {
 
     // Checks if the connection is active for the client.
     if (connectedClients.get(sellerId)) {
-      if (payoutStatus === "deny") {
+      if (payoutStatus === "denied") {
         sendDataToClient(
           sellerId,
-          "statusMessage",
+          "denied",
           "Transacción denegada por el vendedor."
         );
 
@@ -42,17 +42,18 @@ export async function POST(req, res) {
         return NextResponse.json({}, { status: 200 });
       }
 
-      if (payoutStatus === "approved") {
-        // Cleans and close pointing to a determinated client with the sellerId (the id that represents the client)
-        cleanupClientConnection(sellerId, "cancel");
-        return NextResponse.json(
-          {
-            data: "Transaccion realizada con exito, Impretion se encargara del resto.",
-          },
-          { status: 200 }
+      if (payoutStatus === "accepted") {
+        sendDataToClient(
+          sellerId,
+          "accepted",
+          "El vendedor ha aceptado la transacción."
         );
+
+        // Cleans and close pointing to a determinated client with the sellerId (the id that represents the client)
+        cleanupClientConnection(sellerId, "approved");
+
+        return NextResponse.json({}, { status: 200 });
       }
-      // TO-DO: Handle the connected client case
     } else {
       return NextResponse.json(
         {
@@ -84,10 +85,36 @@ export async function GET(req, res) {
     const queryParams = new URLSearchParams(urlParts[1]);
     clientId = queryParams.get("id");
     const shopRef = queryParams.get("shopRef");
+    const clientData = queryParams.get("clientData");
 
     // LabsMobile SMS data sender, url to the user to set the payment to deny/accept/block
+    /*
+    const response = await fetch("https://api.labsmobile.com/json/send", {
+      method: "POST",
+      headers: {
+        "Cache-Control": "no-cache",
+        Authorization:
+          "Basic " +
+          btoa(`admin@impretion.com:${process.env.LABSMOBILE_API_KEY}`),
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        message: `[Test] El cliente con ID ${clientId} quiere hacer una compra, Entra a este link.`,
+        tpoa: "Impretion",
+        recipient: [
+          {
+            msisdn: `573146816140`,
+          },
+        ],
+      }),
+    });
+     */
+
     console.log(
-      `http://localhost:3000/shops-service/payment-processing?shopRef=${shopRef}&payoutId=${clientId}`
+      `http://localhost:3000/shops-service/payment-processing?shopRef=${shopRef}&payoutId=${clientId}&clientData=${encodeURIComponent(
+        clientData
+      )}`
     );
 
     // Creates a session on the DB for each buy
@@ -171,7 +198,7 @@ function cancelByTimeout(clientId) {
 // COUNTDOWN SYSTEM
 // Define the countdown duration in milliseconds
 const countdownDuration = 5 * 60 * 1000; // 5 minutes in milliseconds
-const countdownDurationTest = 60000; // 5 minutes in milliseconds
+const countdownDurationTest = 100000; // 5 minutes in milliseconds
 
 // Function to format the time as "mm:ss"
 function formatTime(time) {

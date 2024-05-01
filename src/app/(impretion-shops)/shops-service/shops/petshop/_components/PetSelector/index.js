@@ -1,50 +1,67 @@
 "use client";
 
+import { useShopServicesUserData } from "@/app/_store";
 import { useState } from "react";
 import { FaCat, FaDog } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
 
-export default function PetSelector({ petFormOnChangeHandler, id }) {
-  const [showPetList, setShowPetList] = useState(false);
-  const [selectedPet, setSelectedPet] = useState({ pet: "" });
+export default function PetSelector({
+  petFormOnChangeHandler,
+  id,
+  index,
+  selectedPet, // Receive selectedPet as a prop
+}) {
+  const [showPetTypeList, setShowPetTypeList] = useState(false);
+  const { setOrderData, orderData } = useShopServicesUserData();
 
   const selectedPetHandler = (pet) => {
-    setSelectedPet({ pet });
     petFormOnChangeHandler("petType", pet, id);
-    setShowPetList(false);
+    setShowPetTypeList(false);
   };
 
   return (
     <div style={{ color: "#555555", marginBottom: "10px" }}>
+      {orderData?.buyData[index]?.petType === null && (
+        <p style={{ fontSize: "12px", color: "red" }}>
+          Debes seleccionar tu tipo de mascota, basándonos en esto, podremos
+          hacer un mejor diseño en tu artículo.
+        </p>
+      )}
       <div
         style={{
-          border: "1px solid #ccc",
           padding: "5px",
           borderRadius: "4px",
           height: "35px",
           display: "flex",
           alignItems: "center",
           background: "#fff",
+          border:
+            orderData?.buyData[index]?.petType === null
+              ? "1px solid red"
+              : "1px solid #ccc",
         }}
-        onClick={() => setShowPetList(!showPetList)}
+        onClick={() => setShowPetTypeList(!showPetTypeList)}
       >
         <div>
-          {selectedPet.pet ? (
-            <>
-              Seleccionaste: {selectedPet.icon} {selectedPet.pet}
-            </>
+          {selectedPet ? ( // Use the selectedPet prop
+            <>Seleccionaste: {selectedPet}</>
           ) : (
-            <div style={{ display: "flex" }}>
+            <div
+              style={{
+                display: "flex",
+                color: orderData?.buyData[index]?.petType === null && "red",
+              }}
+            >
               <IoMdArrowDropdown
                 style={{ marginRight: "10px", fontSize: "18px" }}
               />
-              <p>Selecciona tu mascota</p>
+              <p>Selecciona tu tipo de mascota</p>
             </div>
           )}
         </div>
       </div>
       <div>
-        {showPetList && (
+        {showPetTypeList && (
           <>
             <div
               style={{
@@ -86,7 +103,7 @@ export default function PetSelector({ petFormOnChangeHandler, id }) {
                 fontSize: "17px",
                 background: "#fff",
               }}
-              onClick={() => selectedPetHandler("Gato", "FaDog")}
+              onClick={() => selectedPetHandler("Gato")}
             >
               <div
                 style={{
