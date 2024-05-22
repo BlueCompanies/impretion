@@ -1,5 +1,7 @@
 import { MdInfo } from "react-icons/md";
 
+export const runtime = "edge";
+
 export default function FieldDescription({ children }) {
   return (
     <div

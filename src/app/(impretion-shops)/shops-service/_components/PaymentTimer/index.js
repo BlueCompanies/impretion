@@ -1,6 +1,8 @@
 import React from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
+export const runtime = "edge";
+
 const PaymentTimer = ({ paymentStatus }) => {
   console.log("¡¡_ ", paymentStatus);
   const customChildren = ({ remainingTime }) => {

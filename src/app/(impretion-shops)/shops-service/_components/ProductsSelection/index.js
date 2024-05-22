@@ -1,8 +1,11 @@
 import ProductsModal from "./ProductsModal";
 
-export default function ProductsSelection () {
+export const runtime = "edge";
 
-    return (<>
-        <ProductsModal/>
-    </>)
+export default function ProductsSelection() {
+  return (
+    <>
+      <ProductsModal />
+    </>
+  );
 }
