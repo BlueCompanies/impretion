@@ -217,7 +217,7 @@ export default function CustomizeAndSelectProduct({
         >
           <FieldDescription>
             Asegúrate de asignarle un diseño a cada {selectedProduct} que
-            agregues. Ningún producto puede quedar "sin diseño".
+            agregues. Ningún producto puede quedar &quot;sin diseño&quot;.
           </FieldDescription>
           <div
             style={{ display: "flex", marginBottom: "5px", padding: "10px" }}
