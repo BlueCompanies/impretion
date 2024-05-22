@@ -3,6 +3,10 @@ import { getShopInfo } from "@/app/_lib/shop/getShop";
 import PetFormList from "./_components/PetFormList";
 import FieldDescription from "./_components/FieldDescription";
 import CustomerDeliveryData from "../../_components/CustomerDeliveryData";
+import { getCookie } from "cookies-next";
+import NoSessionAlert from "../../_components/Session/NoSessionAlert";
+import { getClientSession } from "@/app/_lib/shop/getClientSession";
+import CreateSession from "../../_components/Session/CreateSession";
 
 export const runtime = "edge";
 export default async function Page({ searchParams }) {
@@ -13,9 +17,16 @@ export default async function Page({ searchParams }) {
 
   //await fetch("http://localhost:3000/api/user/get-user-ip");
 
+  const clientSession = getCookie("clientSession")
+  // checks if there is an active session, if not active session, show feedback to user.
+  const currentSession = await getClientSession(clientSession)
+
+
   if (shopInfo && shopRef) {
     return (
       <div>
+        <CreateSession/>
+        {!currentSession && <NoSessionAlert/>}
         <div
           style={{
             display: "flex",
@@ -68,7 +79,7 @@ export default async function Page({ searchParams }) {
             background: "#8C52FF",
           }}
         >
-          <CashPaymentRequest />
+          <CashPaymentRequest currentSession={currentSession}/>
         </div>
       </div>
     );

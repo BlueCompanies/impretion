@@ -1,5 +1,4 @@
 export default async function insertClientSession(generatedSessionId) {
-  console.log("ptmMMMMMMMMMMMMMMMMMMMM", generatedSessionId);
   try {
     const x = await fetch(
       "https://sa-east-1.aws.data.mongodb-api.com/app/data-lqpho/endpoint/data/v1/action/insertOne",
@@ -26,9 +25,7 @@ export default async function insertClientSession(generatedSessionId) {
       }
     );
 
-    console.log("ex: ", x);
     const data = await x.json();
-    console.log("deira: ", data);
   } catch (error) {
     console.log(error);
   }

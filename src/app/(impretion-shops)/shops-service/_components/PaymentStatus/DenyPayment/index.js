@@ -37,19 +37,6 @@ export default function DenyPayment({
             No puedes denegar este pago porque el link ha vencido!, Por favor,
             pidele al cliente que vuelva a hacer la transacción.
           </p>
-          <button
-            onClick={() => window.close()}
-            style={{
-              marginTop: "10px",
-              border: "none",
-              padding: "10px",
-              borderRadius: "4px",
-              background: "red",
-              color: "#fff",
-            }}
-          >
-            Cerrar ventana
-          </button>
         </ModalMessage>
       )}
       <button

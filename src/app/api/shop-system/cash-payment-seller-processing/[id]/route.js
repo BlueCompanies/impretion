@@ -23,7 +23,7 @@ export async function POST(req, res) {
     const urlParts = req.url.split("?");
     const queryParams = new URLSearchParams(urlParts[1]);
     const sellerId = queryParams.get("id");
-
+console.log("??????")
     const body = await req.json();
     const { payoutStatus } = body;
 
@@ -83,12 +83,14 @@ export async function GET(req, res) {
 
     const urlParts = req.url.split("?");
     const queryParams = new URLSearchParams(urlParts[1]);
+
+    // The client payout id
     clientId = queryParams.get("id");
     const shopRef = queryParams.get("shopRef");
     const clientData = queryParams.get("clientData");
 
     // LabsMobile SMS data sender, url to the user to set the payment to deny/accept/block
-    /*
+  
     const response = await fetch("https://api.labsmobile.com/json/send", {
       method: "POST",
       headers: {
@@ -100,7 +102,7 @@ export async function GET(req, res) {
       },
 
       body: JSON.stringify({
-        message: `[Test] El cliente con ID ${clientId} quiere hacer una compra, Entra a este link.`,
+        message: `Se ha hecho una solicitud de compra con ID: ${clientId}. Porfavor, Entre al siguiente enlace: https://shaky-monkeys-matter.loca.lt/shops-service/payment-processing?shopRef=${shopRef}&payoutId=${clientId}&clientData=${encodeURIComponent(clientData)} para aceptar/rechazar esta solicitud.`,
         tpoa: "Impretion",
         recipient: [
           {
@@ -109,10 +111,13 @@ export async function GET(req, res) {
         ],
       }),
     });
-     */
 
+    const data = await response.json()
+    console.log(data)
+     
+     
     console.log(
-      `http://localhost:3000/shops-service/payment-processing?shopRef=${shopRef}&payoutId=${clientId}&clientData=${encodeURIComponent(
+      "test: ", `http://localhost:3000/shops-service/payment-processing?shopRef=${shopRef}&payoutId=${clientId}&clientData=${encodeURIComponent(
         clientData
       )}`
     );
@@ -214,10 +219,10 @@ function cancelCountdown() {
 }
 
 function startCountdown(clientId) {
-  let remainingTime = countdownDurationTest;
+  let remainingTime = countdownDuration;
   const intervalId = setInterval(() => {
     remainingTime -= 1000; // Decrease remaining time by 1 second
-    if (remainingTime <= 0) {
+    if (remainingTime <= 1) {
       cancelByTimeout(clientId);
     } else {
       sendDataToClient(clientId, "timer", remainingTime);

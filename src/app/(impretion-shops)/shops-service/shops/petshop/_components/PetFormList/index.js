@@ -8,6 +8,7 @@ import styles from "./styles.module.css";
 import { useEffect, useState } from "react";
 import { FaCirclePlus } from "react-icons/fa6";
 import { useShopServicesUserData } from "@/app/_store";
+import ProductsSelection from "@/app/(impretion-shops)/shops-service/_components/ProductsSelection";
 
 export default function PetFormList() {
   const { setOrderData, orderData } = useShopServicesUserData();
@@ -63,12 +64,8 @@ export default function PetFormList() {
   };
 
   useEffect(() => {
-    setOrderData({ ...orderData, buyData: petFormListData });
+    setOrderData({ ...orderData, petData: petFormListData });
   }, [petFormListData]);
-
-  useEffect(() => {
-    console.log(orderData);
-  }, [orderData]);
 
   return (
     <>
@@ -120,7 +117,7 @@ export default function PetFormList() {
 
                 <input
                   type="text"
-                  placeholder="Nombre de tu mascota"
+                  placeholder="Nombre de la mascota"
                   style={{
                     width: "100%",
                     padding: "10px",
@@ -179,25 +176,7 @@ export default function PetFormList() {
                   value={petFormListData[index].additionalNote}
                 ></textarea>
 
-                <button
-                  style={{
-                    background: "#8C52FF",
-                    border: "none",
-                    outline: "none",
-                    padding: "10px",
-                    borderRadius: "4px",
-                    color: "#fff",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  <div>
-                    <FaToolbox
-                      style={{ marginRight: "12px", fontSize: "14px" }}
-                    />
-                  </div>
-                  <p>Selecciona los articulos...</p>
-                </button>
+                <ProductsSelection />
               </div>
             </div>
           ) : (
@@ -207,7 +186,7 @@ export default function PetFormList() {
               }}
               onClick={() => showPetFormHandler(pet.id)}
             >
-              {orderData.buyData[index].petType === null && (
+              {orderData.petData[index].petType === null && (
                 <p style={{ fontSize: "12px", color: "red" }}>
                   Debes seleccionar tu tipo de mascota en el apartado
                   &quot;Selecciona tu tipo de mascota&quot;
@@ -220,7 +199,7 @@ export default function PetFormList() {
                   border: "none",
                   outline: "none",
                   background:
-                    orderData.buyData[index].petType === null
+                    orderData.petData[index].petType === null
                       ? "red"
                       : "#8C52FF",
                   borderRadius: "4px",

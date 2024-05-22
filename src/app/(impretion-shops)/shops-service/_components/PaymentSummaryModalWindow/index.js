@@ -12,29 +12,9 @@ export default function PaymentSummaryModalWindow({
   setPaymentRequestAccepted,
   orderData,
 }) {
-  const { buyData } = orderData;
+  const { petData } = orderData;
 
   // Esta cookies seteada debe borrarse al mismo tiempo que el documento en mongodb que la contiene.
-
-  useEffect(() => {
-    (async () => {
-      if (!hasCookie("session")) {
-        const uid = new ShortUniqueId({ length: 10 });
-        const generatedSessionId = uid.rnd();
-        setCookie("session", generatedSessionId);
-
-        await fetch("/api/shop-system/new-client-session", {
-          method: "POST",
-          headers: {
-            contentType: "application/json",
-          },
-          body: JSON.stringify({
-            sessionId: generatedSessionId,
-          }),
-        });
-      }
-    })();
-  }, []);
 
   return (
     <div
@@ -120,8 +100,8 @@ export default function PaymentSummaryModalWindow({
           }}
         >
           <p style={{ color: "#555", fontSize: "15px" }}>Resumen</p>
-          {buyData &&
-            buyData.map((item) => (
+          {petData &&
+            petData.map((item) => (
               <div
                 key={item.id}
                 style={{

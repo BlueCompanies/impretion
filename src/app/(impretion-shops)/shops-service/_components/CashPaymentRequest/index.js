@@ -10,9 +10,10 @@ import { MdCancel } from "react-icons/md";
 import { FaClock } from "react-icons/fa";
 import { useShopServicesUserData } from "@/app/_store";
 import ModalMessage from "../ModalMessage";
-import { hasCookie, setCookie } from "cookies-next";
+import { deleteCookie, getCookie } from "cookies-next";
+import dataUpdate from "@/app/_lib/shop/dataUpdate";
 
-export default function CashPaymentRequest() {
+export default function CashPaymentRequest({ currentSession }) {
   const [cashPaymentInProcess, setCashPaymentInProcess] = useState(false);
   const [onlinePaymentInProcess, setOnlinePaymentInProcess] = useState(false);
 
@@ -23,6 +24,8 @@ export default function CashPaymentRequest() {
   const [paymentRequestAccepted, setPaymentRequestAccepted] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState("");
   const { setOrderData, orderData } = useShopServicesUserData();
+
+  const [expiredSession, setExpiredSession] = useState(false);
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -35,15 +38,6 @@ export default function CashPaymentRequest() {
   // Generates the API identifier so it can be manipulated by POST request i.e
   const uid = new ShortUniqueId({ length: 10 });
   const generatedId = uid.rnd();
-
-  /*
-  HAY QUE PONER UN TOKEN DE SSION, CUANDO SE ACEPTE/DENIEGE/CANCELE BY TIMEOUT
-  UNA ORDEN, SE VENCERA/ELIMINARA EL TOKEN, EL USUARIO DEBERA VOLVER A SCANEAR EL CODIGO PARA VOLVER A CREAR OTRA SESION.
-  QUIZA EL TOKEN DESDE LA DB SE VENZA LUEGO DE UN TIEMPO...
-
-  PONER UNA COOKIE EN EL NAVEGADOR DEL CLIENTE CONECTARLA A UNA BASE DE DATOS Y PONERLE MAXIMO 3 TRIES ESTO PARA EL PAGO EN LINEA.
-  LUEGO DE LOS TRIES SE CERRARA LA SESION, NO PODRA VOLVER A HACER NINGUNA TRANSACCION HASTA VOLVER A SCANEAR (TENER UN NUEVO TOKEN)
-  */
 
   // Cash payment by client
   const cashPayoutRequest = () => {
@@ -106,6 +100,7 @@ export default function CashPaymentRequest() {
       });
 
       eventSource.addEventListener("cancelByTimeout", () => {
+        console.log("mrd cancel timeoutome");
         eventSource.close();
         setPaymentStatusMessage(
           "El tiempo limite de espera limite se ha excedido, el vendedor no ha dado respuesta a tu peticion"
@@ -140,21 +135,82 @@ export default function CashPaymentRequest() {
   };
 
   // Online payment by client
-  const onlinePayoutRequest = () => {};
-
-  useEffect(() => {
-    if (paymentRequestAccepted && paymentType === "cashPayment") {
-      cashPayoutRequest();
+  const onlinePayoutRequest = async (currentSession) => {
+    const shopRef = searchParams.get("shopRef");
+    if (!shopRef) {
+      alert(
+        "No se ha encontrado ninguna tienda de referencia, por favor, vuelve a scanear el QR."
+      );
     }
 
-    if (paymentRequestAccepted && paymentType === "onlinePayment") {
-      //payoutRequest();
-      setOnlinePaymentInProcess(true);
+    // Save user's data and buy data
+    // send the data the customer's data to the DB and close/delete the session
+    await fetch(
+      "/api/shop-system/client-session-count-handler/session-data-manager",
+      {
+        method: "POST",
+        headers: { ContentType: "application/json" },
+        body: JSON.stringify({
+          currentSession,
+          shopRef,
+          orderData,
+          orderType: "onlinePayment",
+        }),
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (paymentRequestAccepted) {
+      console.log(paymentRequestAccepted);
+      // Get the current client session cookie
+      const clientSession = getCookie("clientSession");
+
+      // Manages the user's payment tries.
+      const fetchClientSessionCountData = async (filter, update) => {
+        await fetch(`/api/shop-system/client-session-count-handler`, {
+          method: "POST",
+          headers: { ContentType: "application/json" },
+          body: JSON.stringify({
+            filter,
+            update,
+          }),
+        });
+      };
+
+      // get the current client session count
+      if (currentSession) {
+        if (
+          paymentRequestAccepted &&
+          paymentType === "cashPayment" &&
+          currentSession?.paymentTries?.cashPaymentTries > 0
+        ) {
+          fetchClientSessionCountData(
+            { sessionId: clientSession },
+            { $inc: { "paymentTries.cashPaymentTries": -1 } }
+          ).then((res) => res);
+          cashPayoutRequest();
+        }
+
+        if (
+          paymentRequestAccepted &&
+          paymentType === "onlinePayment" &&
+          currentSession.paymentTries.onlinePaymentTries > 0
+        ) {
+          //After an online payout is requested, the session should be deleted.
+          fetchClientSessionCountData(
+            { sessionId: clientSession },
+            { $inc: { "paymentTries.onlinePaymentTries": -1 } }
+          ).then((res) => res);
+          onlinePayoutRequest().then((res) => res);
+          setOnlinePaymentInProcess(true);
+        }
+      }
     }
   }, [paymentRequestAccepted]);
 
   const modalWindowHandler = (paymentType) => {
-    const { userData, buyData } = orderData;
+    const { userData, petData } = orderData;
     const fieldsToCheck = ["fullName", "address", "cellphone"];
 
     // Check userData fields
@@ -168,24 +224,24 @@ export default function CashPaymentRequest() {
       }
     }
 
-    // Check buyData fields
-    const updatedBuyData = buyData.map((pet) => {
+    // Check petData fields
+    const updatedPetData = petData.map((pet) => {
       const petType = pet.petType ? pet.petType.trim() : "";
       if (petType.length === 0) {
         return { ...pet, petType: null };
       }
       return pet;
     });
-    const buyDataHasNullFields = updatedBuyData.some(
+    const petDataHasNullFields = updatedPetData.some(
       (pet) => pet.petType === null
     );
 
     // Update state if necessary
-    if (userDataHasNullFields || buyDataHasNullFields) {
+    if (userDataHasNullFields || petDataHasNullFields) {
       setOrderData({
         ...orderData,
         userData: updatedUserData,
-        buyData: updatedBuyData,
+        petData: updatedPetData,
       });
     } else {
       setShowSummaryPaymentModalWindow(!showSummaryPaymentModalWindow);
@@ -210,6 +266,18 @@ export default function CashPaymentRequest() {
   return (
     <div style={{ width: "100%", margin: "10px" }}>
       <>
+        {expiredSession && (
+          <ModalMessage>
+            <div style={{ fontSize: "12px", color: "#555" }}>
+              Esta sesion ya ha caducado, si quieres volver a hacer otro pedido
+              por favor, vuelve a scanear el QR. Por favor cierra esta pagina
+              <p style={{ fontSize: "11px", marginTop: "10px" }}>
+                Estas medidas son medidas de seguridad.
+              </p>
+            </div>
+          </ModalMessage>
+        )}
+
         {cashPaymentInProcess && (
           <div
             style={{
@@ -281,7 +349,7 @@ export default function CashPaymentRequest() {
                 }}
               >
                 <p style={{ color: "#555", margin: "auto" }}>
-                  Código de cliente -{" "}
+                  Código de transacción -{" "}
                   {searchParams.get("payoutId") &&
                     searchParams.get("payoutId").toLocaleLowerCase()}
                 </p>
@@ -296,23 +364,13 @@ export default function CashPaymentRequest() {
               <p>
                 Haremos un diseño de acuerdo a las preferencias de diseño que
                 nos diste, nos pondremos en contacto contigo para acordar el
-                pago.
+                pago y los diseños.
+              </p>
+              <p>
+                Recuerda que puedes ponerte en contacto con nosotros al numero{" "}
+                <span>314872192</span>
               </p>
               <p style={{ marginTop: "5px" }}>Puedes cerrar esta ventana.</p>
-
-              <button
-                onClick={() => window.close()}
-                style={{
-                  marginTop: "10px",
-                  border: "none",
-                  padding: "10px",
-                  borderRadius: "4px",
-                  background: "red",
-                  color: "#fff",
-                }}
-              >
-                Cerrar ventana
-              </button>
             </div>
           </ModalMessage>
         )}
@@ -323,6 +381,7 @@ export default function CashPaymentRequest() {
             flexDirection: "row",
           }}
         >
+          {/*
           <button
             onClick={() => modalWindowHandler("cashPayment")}
             style={{
@@ -338,6 +397,7 @@ export default function CashPaymentRequest() {
           >
             Solicitar pago en efectivo
           </button>
+        */}
 
           <button
             onClick={() => modalWindowHandler("onlinePayment")}
@@ -352,7 +412,7 @@ export default function CashPaymentRequest() {
               margin: "5px",
             }}
           >
-            Pagar después por transferencia
+            Enviar solicitud
           </button>
         </div>
 

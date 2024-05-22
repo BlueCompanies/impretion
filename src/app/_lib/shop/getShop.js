@@ -13,8 +13,8 @@ export const getShopInfo = async (shopRef) => {
         },
         body: JSON.stringify({
           dataSource: "Impretion",
-          database: "shops",
-          collection: "shops-info",
+          database: "impretion-shops",
+          collection: "affiliated-shops",
           filter: {
             shopId: shopRef,
           },

@@ -21,7 +21,7 @@ export default function PetSelector({
 
   return (
     <div style={{ color: "#555555", marginBottom: "10px" }}>
-      {orderData?.buyData[index]?.petType === null && (
+      {orderData?.petData[index]?.petType === null && (
         <p style={{ fontSize: "12px", color: "red" }}>
           Debes seleccionar tu tipo de mascota, basándonos en esto, podremos
           hacer un mejor diseño en tu artículo.
@@ -36,7 +36,7 @@ export default function PetSelector({
           alignItems: "center",
           background: "#fff",
           border:
-            orderData?.buyData[index]?.petType === null
+            orderData?.petData[index]?.petType === null
               ? "1px solid red"
               : "1px solid #ccc",
         }}
@@ -49,7 +49,7 @@ export default function PetSelector({
             <div
               style={{
                 display: "flex",
-                color: orderData?.buyData[index]?.petType === null && "red",
+                color: orderData?.petData[index]?.petType === null && "red",
               }}
             >
               <IoMdArrowDropdown

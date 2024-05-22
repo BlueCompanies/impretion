@@ -292,7 +292,7 @@ export const useGeneratedMockups = create((set) => ({
 // IMPRETION SHOPSERVICES
 export const useShopServicesUserData = create((set) => ({
   orderData: {
-    buyData: [
+    petData: [
       {
         id: 1,
         additionalNote: "",
@@ -302,6 +302,7 @@ export const useShopServicesUserData = create((set) => ({
         petType: "",
       },
     ],
+    orderDetails: [],
     userData: {
       address: "",
       addressNote: "",
